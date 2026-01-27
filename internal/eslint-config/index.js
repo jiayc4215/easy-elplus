@@ -26,7 +26,8 @@ export default defineConfig([
       }
     },
     rules: {
-      "vue/multi-word-component-names": "off"
+      "vue/multi-word-component-names": "off", // 允许单字组件
+      "vue/prefer-import-from-vue": "off" // 允许直接引入
     }
   },
 

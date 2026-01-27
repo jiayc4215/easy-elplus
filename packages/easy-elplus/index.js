@@ -1,0 +1,24 @@
+import Button from "@easy-elplus/components/button"
+
+// 组件列表
+const components = [Button]
+
+// 是否已安装标识（防止重复 install）
+const INSTALLED_KEY = Symbol("INSTALLED_KEY")
+
+// 组件库插件
+const EasyElementPlus = {
+  install(app) {
+    // 防止重复安装
+    if (app[INSTALLED_KEY]) return
+
+    app[INSTALLED_KEY] = true
+
+    // 逐个安装组件
+    components.forEach(component => {
+      app.use(component)
+    })
+  }
+}
+
+export default EasyElementPlus

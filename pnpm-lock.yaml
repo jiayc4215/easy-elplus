@@ -4,6 +4,15 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    '@vue/shared':
+      specifier: ^3.5.27
+      version: 3.5.27
+    vue:
+      specifier: ^3.5.27
+      version: 3.5.27
+
 importers:
 
   .:
@@ -45,6 +54,9 @@ importers:
       taze:
         specifier: ^19.9.2
         version: 19.9.2
+      vue:
+        specifier: 'catalog:'
+        version: 3.5.27(typescript@5.9.3)
 
   docs:
     devDependencies:
@@ -74,7 +86,11 @@ importers:
 
   packages/hooks: {}
 
-  packages/utils: {}
+  packages/utils:
+    devDependencies:
+      '@vue/shared':
+        specifier: 'catalog:'
+        version: 3.5.27
 
   play:
     dependencies:
