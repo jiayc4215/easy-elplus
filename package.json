@@ -1,0 +1,47 @@
+{
+  "name": "element-plus-easy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm -C play dev",
+    "docs:dev": "pnpm -C docs docs:dev",
+    "docs:build": "pnpm -C docs docs:build",
+    "clean:all": "pnpm -r exec rm -rf node_modules && rm -rf node_modules && pnpm store prune",
+    "lint:fix": "eslint --fix . --ext .js,.mjs,.cjs,.vue",
+    "lint:prettier": "prettier --write \"**/*.{js,ts,mjs,cjs,json,tsx,css,less,scss,vue,html,md}\"",
+    "prepare": "husky",
+    "commit": "git cz",
+    "up": "taze major -r -w -I -l"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.28.2",
+  "dependencies": {
+    "@easy-elplus/components": "workspace:^",
+    "@easy-elplus/eslint-config": "workspace:^",
+    "@easy-elplus/hooks": "workspace:^",
+    "@easy-elplus/utils": "workspace:^"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.3.1",
+    "@commitlint/config-conventional": "^20.3.1",
+    "commitizen": "^4.3.1",
+    "cz-git": "^1.12.0",
+    "eslint": "^9.39.2",
+    "husky": "^9.1.7",
+    "prettier": "^3.8.1",
+    "taze": "^19.9.2"
+  },
+  "lint-staged": {
+    "*.{js,mjs,cjs,vue}": "eslint --fix",
+    "*.{js,mjs,cjs,vue,json,css,less,scss,vue,html,md}": "prettier --write"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-git"
+    }
+  }
+}
