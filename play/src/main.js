@@ -1,5 +1,11 @@
 import { createApp } from "vue"
+import ElementPlus from "element-plus"
+import EasyElementPlus from "easy-elplus"
+import "element-plus/dist/index.css"
 import App from "./App.vue"
-import EasyElementPlus from "../../packages/easy-elplus"
 
-createApp(App).use(EasyElementPlus).mount("#app")
+const app = createApp(App)
+
+app.use(ElementPlus)
+app.use(EasyElementPlus)
+app.mount("#app")

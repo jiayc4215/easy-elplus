@@ -1,7 +1,7 @@
 <script setup></script>
 
 <template>
-  <easy-button />
+  <el-button>123</el-button>
 </template>
 
 <style scoped></style>

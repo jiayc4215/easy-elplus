@@ -19,7 +19,7 @@ const buildOutput = resolve(projRoot, "dist")
 const epOutput = resolve(buildOutput, "easy-elplus")
 
 // 全量打包任务函数
-const buildFullEntry = async () => {
+export const buildFullEntry = async () => {
   const bundle = await rollup({
     input: resolve(epRoot, "index.js"), // 配置入口文件
     plugins: [
@@ -40,4 +40,4 @@ const buildFullEntry = async () => {
     }
   })
 }
-buildFullEntry()
+// buildFullEntry()

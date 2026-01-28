@@ -1,0 +1,16 @@
+{
+  "name": "easy-elplus",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "module": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@easy-elplus/components": "workspace:^",
+    "@easy-elplus/constants": "workspace:^",
+    "@easy-elplus/hooks": "workspace:^",
+    "@easy-elplus/utils": "workspace:^"
+  }
+}

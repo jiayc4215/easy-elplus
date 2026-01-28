@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm -C play dev",
+    "build": "pnpm -C internal/build build",
     "docs:dev": "pnpm -C docs docs:dev",
     "docs:build": "pnpm -C docs docs:build",
     "clean:all": "pnpm -r exec rm -rf node_modules && rm -rf node_modules && pnpm store prune",
