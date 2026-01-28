@@ -21,6 +21,7 @@
   "packageManager": "pnpm@10.28.2",
   "dependencies": {
     "@easy-elplus/components": "workspace:^",
+    "@easy-elplus/constants": "workspace:^",
     "@easy-elplus/eslint-config": "workspace:^",
     "@easy-elplus/hooks": "workspace:^",
     "@easy-elplus/utils": "workspace:^"
