@@ -26,7 +26,7 @@ const excludeFiles = files => {
 export const buildModules = async () => {
   const input = excludeFiles(
     await glob("**/*.{js,ts,vue}", {
-      cwd: pkgRoot,
+      cwd: epRoot,
       absolute: true, // 返回绝对路径
       onlyFiles: true // 只返回文件的路径
     })
@@ -39,12 +39,13 @@ export const buildModules = async () => {
       nodeResolve()
     ],
     // 排除不进行打包的 npm 包，例如 Vue，以便减少包的体积
-    external: ["vue", "@vue/shared"]
+    external: ["vue", "element-plus"]
   })
   // 配置输出文件格式
   bundle.write({
     format: "esm", // 配置输出格式
     dir: resolve(epOutput, "es"), // 配置输出目录
+    exports: "named", // 使用具名导出，避免混合导出警告
     preserveModules: true, // 该选项将使用原始模块名作为文件名，为所有模块创建单独的 chunk
     preserveModulesRoot: epRoot,
     entryFileNames: `[name].mjs` // [name]：入口文件的文件名（不包含扩展名），也就是生产 .mjs 结尾的文件
@@ -52,9 +53,10 @@ export const buildModules = async () => {
   bundle.write({
     format: "cjs", // 配置输出格式
     dir: resolve(epOutput, "lib"), // 配置输出目录
+    exports: "named", // 使用具名导出，避免混合导出警告
     preserveModules: true, // 该选项将使用原始模块名作为文件名，为所有模块创建单独的 chunk
     preserveModulesRoot: epRoot,
-    entryFileNames: `[name].cjs` // [name]：入口文件的文件名（不包含扩展名），也就是生产 .cjs 结尾的文件
+    entryFileNames: `[name].js` // [name]：入口文件的文件名（不包含扩展名），也就是生产 .js 结尾的文件
   })
 }
 // buildModules()

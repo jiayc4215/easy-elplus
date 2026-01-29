@@ -1,7 +1,7 @@
 <script setup>
 import { ref, useAttrs } from "vue"
 import { ElButton } from "element-plus"
-
+import { omit } from "lodash-es"
 import { isFunction } from "@easy-elplus/utils"
 
 defineOptions({
@@ -9,22 +9,15 @@ defineOptions({
   name: "EasyButton"
 })
 
-const props = defineProps({
-  onClick: {
-    type: Function,
-    default: () => {}
-  }
-})
-
 const loading = ref(false)
 
 const attrs = useAttrs()
-const handleClick = async () => {
+const onClick = async () => {
   try {
     loading.value = true
 
-    if (isFunction(props.onClick)) {
-      await props.onClick()
+    if (isFunction(attrs.onClick)) {
+      await attrs.onClick()
     }
   } finally {
     loading.value = false
@@ -33,7 +26,7 @@ const handleClick = async () => {
 </script>
 
 <template>
-  <el-button :loading="loading" v-bind="attrs" @click="handleClick">
+  <el-button :loading="loading" v-bind="omit(attrs, 'onClick')" @click="onClick">
     <slot />
   </el-button>
 </template>

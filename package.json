@@ -1,5 +1,5 @@
 {
-  "name": "element-plus-easy",
+  "name": "easy-elplus",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,31 +10,35 @@
     "docs:dev": "pnpm -C docs docs:dev",
     "docs:build": "pnpm -C docs docs:build",
     "clean:all": "pnpm -r exec rm -rf node_modules && rm -rf node_modules && pnpm store prune",
-    "lint:fix": "eslint --fix . --ext .js,.mjs,.cjs,.vue",
+    "lint": "eslint . --ext .js,.mjs,.cjs,.vue --config ./eslint.config.js",
+    "lint:fix": "eslint . --ext .js,.mjs,.cjs,.vue --fix --config ./eslint.config.js",
     "lint:prettier": "prettier --write \"**/*.{js,ts,mjs,cjs,json,tsx,css,less,scss,vue,html,md}\"",
     "prepare": "husky",
     "commit": "git cz",
-    "up": "taze major -r -w -I -l"
+    "up": "taze major -r -w -I -l",
+    "release": "release-it"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.28.2",
   "dependencies": {
-    "@easy-elplus/components": "workspace:^",
-    "@easy-elplus/constants": "workspace:^",
-    "@easy-elplus/eslint-config": "workspace:^",
-    "@easy-elplus/hooks": "workspace:^",
-    "@easy-elplus/utils": "workspace:^"
+    "lodash-es": "^4.17.23"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.3.1",
     "@commitlint/config-conventional": "^20.3.1",
+    "@easy-elplus/components": "workspace:^",
+    "@easy-elplus/constants": "workspace:^",
+    "@easy-elplus/eslint-config": "workspace:^",
+    "@easy-elplus/hooks": "workspace:^",
+    "@easy-elplus/utils": "workspace:^",
     "commitizen": "^4.3.1",
     "cz-git": "^1.12.0",
     "eslint": "^9.39.2",
     "husky": "^9.1.7",
     "prettier": "^3.8.1",
+    "release-it": "^19.2.4",
     "taze": "^19.9.2",
     "vue": "catalog:"
   },

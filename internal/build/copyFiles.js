@@ -19,6 +19,8 @@ const epOutput = resolve(buildOutput, "easy-elplus")
 export const copyFiles = async () => {
   await mkdir(epOutput, { recursive: true })
   await copyFile(epPackage, join(epOutput, "package.json"))
+  await copyFile(epPackage, join(epOutput, "README.md"))
+  await copyFile(epPackage, join(epOutput, "LICENSE"))
 }
 
 // copyFiles()

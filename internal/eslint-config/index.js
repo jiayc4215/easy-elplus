@@ -1,11 +1,10 @@
 import js from "@eslint/js" //js规范（标准的）
 import globals from "globals" //环境
 import pluginVue from "eslint-plugin-vue" //vue规范
-import { defineConfig } from "eslint/config" //配置
 import pluginCypress from "eslint-plugin-cypress"
 import eslintConfigPrettier from "eslint-config-prettier" // prettier
 const ignores = ["node_modules", "dist", "pnpm-lock.yaml", "docs/.vitepress/cache/*", "docs/.vitepress/dist/*", "!.*"]
-export default defineConfig([
+export default [
   // 1. 全局忽略
   {
     ignores
@@ -33,4 +32,4 @@ export default defineConfig([
 
   // 4. Prettier 必须放在最后以覆盖冲突规则
   eslintConfigPrettier
-])
+]

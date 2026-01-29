@@ -28,15 +28,17 @@ export const buildFullEntry = async () => {
       nodeResolve()
     ],
     // 排除不进行打包的 npm 包，例如 Vue，以便减少包的体积
-    external: ["vue"]
+    external: ["vue", "element-plus"]
   })
   // 配置输出文件格式
   bundle.write({
     format: "umd",
-    file: resolve(epOutput, "dist", "index.full.js"),
+    file: resolve(epOutput, "dist/index.full.js"),
     name: "EasyElPlus",
+    exports: "named", // 使用具名导出，避免混合导出警告
     globals: {
-      vue: "Vue"
+      vue: "Vue",
+      "element-plus": "ElementPlus"
     }
   })
 }

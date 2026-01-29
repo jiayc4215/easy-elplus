@@ -22,3 +22,6 @@ const EasyElementPlus = {
 }
 
 export default EasyElementPlus
+
+// 具名导出所有组件，支持按需导入
+export * from "@easy-elplus/components"

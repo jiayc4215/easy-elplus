@@ -1,7 +1,9 @@
-<script setup></script>
+<script setup>
+import EasyButton from "./components/button.vue"
+</script>
 
 <template>
-  <el-button>123</el-button>
+  <EasyButton></EasyButton>
 </template>
 
 <style scoped></style>

@@ -1,16 +1,57 @@
 {
   "name": "easy-elplus",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "module": "index.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "description": "A Component Library for Vue 3",
+  "author": {
+    "name": "Mr.Jia",
+    "email": "jiagongzi0625@gmail.com"
+  },
+  "keywords": [
+    "element-plus",
+    "element",
+    "component library",
+    "ui framework",
+    "ui",
+    "vue"
+  ],
+  "homepage": "https://github.com/jiayc4215/easy-elplus",
+  "bugs": {
+    "url": "https://github.com/jiayc4215/easy-elplus/issues"
+  },
+  "license": "MIT",
+  "main": "lib/index.js",
+  "module": "es/index.mjs",
+  "unpkg": "dist/index.full.js",
+  "jsdelivr": "dist/index.full.js",
+  "exports": {
+    ".": {
+      "import": "./es/index.mjs",
+      "require": "./lib/index.js"
+    },
+    "./es": "./es/index.mjs",
+    "./lib": "./lib/index.js",
+    "./dist/*": "./dist/*",
+    "./es/*": "./es/*",
+    "./lib/*": "./lib/*",
+    "./*": "./*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jiayc4215/easy-elplus.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
-    "@easy-elplus/components": "workspace:^",
-    "@easy-elplus/constants": "workspace:^",
-    "@easy-elplus/hooks": "workspace:^",
-    "@easy-elplus/utils": "workspace:^"
-  }
+    "@vue/shared": "^3.5.27",
+    "lodash-es": "^4.17.23"
+  },
+  "peerDependencies": {
+    "vue": "^3.3.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "not ie 11",
+    "not op_mini all"
+  ]
 }
