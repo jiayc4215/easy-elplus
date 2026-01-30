@@ -9,7 +9,11 @@ export const withInstall = (main, extra) => {
     const components = [main, ...(extra ? Object.values(extra) : [])]
 
     for (const comp of components) {
-      app.component(comp.name, comp)
+      if (comp.name) {
+        app.component(comp.name, comp)
+      } else {
+        console.warn("Component missing name:", comp)
+      }
     }
   }
 
