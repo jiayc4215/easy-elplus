@@ -65,11 +65,9 @@
             <div class="operate-group">
               <template v-for="(item, idx) in getVisibleButtons(scope.row).outside" :key="idx">
                 <el-button
+                  v-bind="item"
                   :type="item.type || 'primary'"
-                  :plain="item.plain || false"
-                  :link="item.link || false"
                   :size="item.size || 'small'"
-                  :color="item.color"
                   @click.stop="item.method(scope.row, scope.$index)"
                 >
                   {{ item.label }}
@@ -88,6 +86,7 @@
                     <el-dropdown-item
                       v-for="(item, idx) in getVisibleButtons(scope.row).inside"
                       :key="idx"
+                      v-bind="item"
                       @click="item.method(scope.row, scope.$index)"
                     >
                       {{ item.label }}
@@ -101,7 +100,14 @@
       </el-table>
     </div>
 
-    <div :class="{ hidden: hidden }" class="pagination-container">
+    <div
+      :class="{ hidden: hidden }"
+      :style="{
+        justifyContent:
+          paginationPosition === 'left' ? 'flex-start' : paginationPosition === 'center' ? 'center' : 'flex-end'
+      }"
+      class="pagination-container"
+    >
       <el-pagination
         v-model:current-page="currentPage"
         v-model:page-size="pageSize"
@@ -148,7 +154,8 @@ const props = defineProps({
   background: { type: Boolean, default: true },
   autoScroll: { type: Boolean, default: true },
   hidden: { type: Boolean, default: false },
-  operates: { type: Object, default: () => ({ list: [] }) }
+  operates: { type: Object, default: () => ({ list: [] }) },
+  paginationPosition: { type: String, default: "right" }
 })
 
 const emit = defineEmits(["update:page", "update:limit", "pagination", "sortChange", "handleSelectionChange"])
@@ -259,6 +266,7 @@ defineExpose({ iTableRef })
 
 .pagination-container {
   padding: 16px 0;
+  display: flex;
   &.hidden {
     display: none;
   }

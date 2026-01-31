@@ -11,17 +11,17 @@ const tableRef = ref(null)
 const tableData = ref([
   {
     date: "2016-05-03",
-    name: "远方os",
+    name: "贾公子1",
     gender: 1,
     age: 35,
     city: "北京",
-    course: "Vue源码课",
+    course: "Vue源码",
     price: 699,
     status: 1
   },
   {
     date: "2016-05-02",
-    name: "近圆os",
+    name: "贾公子2",
     gender: 0,
     age: 45,
     city: "上海",
@@ -31,7 +31,7 @@ const tableData = ref([
   },
   {
     date: "2016-05-04",
-    name: "远万os",
+    name: "贾公子3",
     gender: 1,
     age: 25,
     city: "杭州",
@@ -155,6 +155,7 @@ const onPagination = ({ page, limit }) => {
         stripe: true,
         highlightCurrentRow: true
       }"
+      pagination-position="right"
       @handleSelectionChange="handleSelectionChange"
       @pagination="onPagination"
     >
