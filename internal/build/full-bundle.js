@@ -1,5 +1,6 @@
 import { rollup } from "rollup"
 import vue from "@vitejs/plugin-vue"
+import postcss from "rollup-plugin-postcss"
 import { nodeResolve } from "@rollup/plugin-node-resolve"
 import { fileURLToPath } from "url"
 import { resolve, dirname } from "path"
@@ -25,10 +26,11 @@ export const buildFullEntry = async () => {
     plugins: [
       // 配置插件
       vue(),
-      nodeResolve()
+      nodeResolve(),
+      postcss()
     ],
     // 排除不进行打包的 npm 包，例如 Vue，以便减少包的体积
-    external: ["vue", "element-plus"]
+    external: ["vue", "element-plus", "@element-plus/icons-vue"]
   })
   // 配置输出文件格式
   bundle.write({
@@ -38,7 +40,8 @@ export const buildFullEntry = async () => {
     exports: "named", // 使用具名导出，避免混合导出警告
     globals: {
       vue: "Vue",
-      "element-plus": "ElementPlus"
+      "element-plus": "ElementPlus",
+      "@element-plus/icons-vue": "ElementPlusIconsVue"
     }
   })
 }

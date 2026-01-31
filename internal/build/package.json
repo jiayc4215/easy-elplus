@@ -15,7 +15,9 @@
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@vitejs/plugin-vue": "^6.0.3",
     "fast-glob": "^3.3.3",
-    "rollup": "^4.57.0"
+    "rollup": "^4.57.1",
+    "rollup-plugin-postcss": "^4.0.2",
+    "sass": "^1.97.3"
   },
   "dependencies": {
     "gulp": "^5.0.1"

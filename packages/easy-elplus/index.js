@@ -1,8 +1,9 @@
 import Button from "@easy-elplus/components/button"
 import Descriptions from "@easy-elplus/components/descriptions"
+import Table from "@easy-elplus/components/table"
 
 // 组件列表
-const components = [Button, Descriptions]
+const components = [Button, Descriptions, Table]
 
 // 是否已安装标识（防止重复 install）
 const INSTALLED_KEY = Symbol("INSTALLED_KEY")

@@ -3,6 +3,7 @@ import { dirname, resolve } from "path"
 import { rollup } from "rollup"
 import glob from "fast-glob"
 import vue from "@vitejs/plugin-vue"
+import postcss from "rollup-plugin-postcss"
 
 import { nodeResolve } from "@rollup/plugin-node-resolve"
 
@@ -36,10 +37,11 @@ export const buildModules = async () => {
     plugins: [
       // 配置插件
       vue(),
-      nodeResolve()
+      nodeResolve(),
+      postcss()
     ],
     // 排除不进行打包的 npm 包，例如 Vue，以便减少包的体积
-    external: ["vue", "element-plus"]
+    external: ["vue", "element-plus", "@element-plus/icons-vue"]
   })
   // 配置输出文件格式
   bundle.write({

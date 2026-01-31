@@ -26,8 +26,8 @@
     "lodash-es": "^4.17.23"
   },
   "devDependencies": {
-    "@commitlint/cli": "^20.3.1",
-    "@commitlint/config-conventional": "^20.3.1",
+    "@commitlint/cli": "^20.4.0",
+    "@commitlint/config-conventional": "^20.4.0",
     "@easy-elplus/components": "workspace:^",
     "@easy-elplus/constants": "workspace:^",
     "@easy-elplus/eslint-config": "workspace:^",
