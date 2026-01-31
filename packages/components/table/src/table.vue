@@ -11,13 +11,8 @@
         @sort-change="sortChange"
         @selection-change="handleSelectionChange"
       >
-        <template v-for="(column, index) in newTableHeader">
-          <el-table-column
-            v-if="column && (typeof column.show === 'function' ? column.show() : column.show !== false)"
-            :key="index + 'column'"
-            :min-width="headSpanFit(column)"
-            v-bind="column"
-          >
+        <template v-for="(column, index) in processedHeaders" :key="index + (column.prop || '')">
+          <el-table-column v-if="isColumnVisible(column)" :min-width="headSpanFit(column)" v-bind="column">
             <template v-for="(value, key) in column.slot" #[key]="scope">
               <slot :name="value" v-bind="scope">
                 <div v-if="column.render && String(key) === 'default'" :key="index + 'inner'">
@@ -28,34 +23,26 @@
             </template>
 
             <template v-if="!column.slot" #default="scope">
-              <!-- 处理 render 函数 -->
               <template v-if="column.render">
-                <!-- 如果 render 返回的是函数结果 (VNode 或 字符串) -->
-                <div
-                  v-if="
-                    typeof (typeof column.render === 'function' ? column.render(scope) : column.render) === 'string'
-                  "
-                >
-                  <div v-html="typeof column.render === 'function' ? column.render(scope) : column.render"></div>
+                <div v-if="typeof getRenderContent(column, scope) === 'string'">
+                  <div v-html="getRenderContent(column, scope)"></div>
                 </div>
-                <component v-else :is="column.render" v-bind="scope" :row="scope.row" :index="scope.$index"></component>
+                <component v-else :is="column.render" v-bind="scope" :row="scope.row" :index="scope.$index" />
               </template>
 
-              <!-- 处理 formatter -->
               <template v-else-if="column.formatter">
                 <span v-html="column.formatter(scope.row, column)"></span>
               </template>
 
-              <!-- 默认显示 -->
               <template v-else-if="!column.type">
-                <span>{{ scope.row[column.prop] === 0 ? 0 : scope.row[column.prop] || "--" }}</span>
+                <span>{{ scope.row[column.prop] ?? "--" }}</span>
               </template>
             </template>
           </el-table-column>
         </template>
 
         <el-table-column
-          v-if="operates.list && operates.list.length > 0"
+          v-if="operates.list?.length"
           label="操作"
           align="left"
           :width="operates.width"
@@ -79,7 +66,7 @@
 
               <el-dropdown v-if="getVisibleButtons(scope.row).inside.length" class="custom-dropdown" trigger="click">
                 <el-button link size="small" class="custom-text">
-                  <el-icon style="font-size: 18px"><component :is="MoreFilled" /></el-icon>
+                  <el-icon :size="18"><MoreFilled /></el-icon>
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
@@ -100,14 +87,7 @@
       </el-table>
     </div>
 
-    <div
-      :class="{ hidden: hidden }"
-      :style="{
-        justifyContent:
-          paginationPosition === 'left' ? 'flex-start' : paginationPosition === 'center' ? 'center' : 'flex-end'
-      }"
-      class="pagination-container"
-    >
+    <div v-if="!hidden" class="pagination-container" :style="{ justifyContent: paginationJustify }">
       <el-pagination
         v-model:current-page="currentPage"
         v-model:page-size="pageSize"
@@ -124,15 +104,12 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted, onBeforeUpdate, useSlots, defineOptions } from "vue"
+import { computed, ref, useSlots, watch } from "vue"
 import { MoreFilled } from "@element-plus/icons-vue"
 import { scrollTo } from "./scrollTo"
 
-defineOptions({
-  name: "EasyTable"
-})
+defineOptions({ name: "EasyTable" })
 
-/* 使用 JS 对象声明 Props，不使用 TS 类型声明 */
 const props = defineProps({
   columns: { type: Array, default: () => [] },
   tableData: { type: Array, default: () => [] },
@@ -140,12 +117,7 @@ const props = defineProps({
   page: { type: Number, default: 1 },
   options: {
     type: Object,
-    default: () => ({
-      stripe: false,
-      highlightCurrentRow: false,
-      mutiSelect: false,
-      border: true
-    })
+    default: () => ({ stripe: false, highlightCurrentRow: false, border: true })
   },
   limit: { type: Number, default: 20 },
   pageSizes: { type: Array, default: () => [10, 20, 30, 50] },
@@ -161,54 +133,61 @@ const props = defineProps({
 const emit = defineEmits(["update:page", "update:limit", "pagination", "sortChange", "handleSelectionChange"])
 
 const slots = useSlots()
-const newTableHeader = ref([])
 const iTableRef = ref(null)
+const processedHeaders = ref([])
 
-/* 表头宽度自适应 */
-function headSpanFit(column) {
-  const labelLong = column?.label?.length || 0
-  const size = 20
-  return labelLong * size < 100 ? 100 : labelLong * size
-}
+/** 1. 逻辑优化：使用 watch 监听 columns 变化，避免在 onBeforeUpdate 中过度计算 **/
+watch(
+  () => [props.columns, slots],
+  () => {
+    processedHeaders.value = props.columns.map(column => {
+      const col = { ...column }
+      if (!col.key) col.key = col.prop
 
-/* 生成表头逻辑 */
-function genNewTableHeader() {
-  // 浅拷贝 props.columns 避免直接修改
-  const tempHeaders = [...props.columns]
-
-  tempHeaders.forEach(column => {
-    if (typeof column !== "object") return
-    if (!column.key) column.key = column.prop
-
-    const slotKeys = Object.keys(slots)
-    slotKeys.forEach(key => {
-      const res = key.match(/^(\S+)-(\S+)/)
-      if (res && res[2] === column.key) {
-        if (!column.slot) column.slot = {}
-        column.slot[res[1]] = res[0]
-      }
+      // 匹配插槽逻辑保持不变
+      Object.keys(slots).forEach(key => {
+        const res = key.match(/^(\S+)-(\S+)/)
+        if (res && res[2] === col.key) {
+          col.slot = { ...col.slot, [res[1]]: res[0] }
+        }
+      })
+      return col
     })
-  })
-  newTableHeader.value = tempHeaders
+  },
+  { immediate: true, deep: true }
+)
+
+/** 2. 工具函数 **/
+const headSpanFit = column => {
+  const labelLen = column?.label?.length || 0
+  return Math.max(labelLen * 20, 100)
 }
 
-/* 操作按钮逻辑计算 */
-function getVisibleButtons(row) {
+const isColumnVisible = column => {
+  if (typeof column.show === "function") return column.show()
+  return column.show !== false
+}
+
+const getRenderContent = (column, scope) => {
+  return typeof column.render === "function" ? column.render(scope) : column.render
+}
+
+const getVisibleButtons = row => {
   const list = (props.operates?.list || []).filter(item => {
-    if (typeof item.show === "function") return item.show(row)
-    return item.show !== false
+    return typeof item.show === "function" ? item.show(row) : item.show !== false
   })
-
-  if (list.length > 3) {
-    return {
-      outside: list.slice(0, 2),
-      inside: list.slice(2)
-    }
-  }
-  return { outside: list, inside: [] }
+  return list.length > 3
+    ? {
+        outside: list.slice(0, 2),
+        inside: list.slice(2)
+      }
+    : {
+        outside: list,
+        inside: []
+      }
 }
 
-/* 分页逻辑 */
+/** 3. 分页计算属性 **/
 const currentPage = computed({
   get: () => props.page,
   set: val => emit("update:page", val)
@@ -219,29 +198,25 @@ const pageSize = computed({
   set: val => emit("update:limit", val)
 })
 
-function handleSizeChange(val) {
-  if (currentPage.value * val > props.total) {
-    currentPage.value = 1
-  }
+const paginationJustify = computed(() => {
+  const map = { left: "flex-start", center: "center", right: "flex-end" }
+  return map[props.paginationPosition] || "flex-end"
+})
+
+/** 4. 事件处理 **/
+const handleSizeChange = val => {
+  if (currentPage.value * val > props.total) currentPage.value = 1
   emit("pagination", { page: currentPage.value, limit: val })
-  props.autoScroll && scrollTo(0, 800)
+  if (props.autoScroll) scrollTo(0, 800)
 }
 
-function handleCurrentChange(val) {
+const handleCurrentChange = val => {
   emit("pagination", { page: val, limit: pageSize.value })
-  props.autoScroll && scrollTo(0, 800)
+  if (props.autoScroll) scrollTo(0, 800)
 }
 
-function sortChange({ column, prop, order }) {
-  emit("sortChange", { column, prop, order })
-}
-
-function handleSelectionChange(val) {
-  emit("handleSelectionChange", val)
-}
-
-onMounted(genNewTableHeader)
-onBeforeUpdate(genNewTableHeader)
+const sortChange = args => emit("sortChange", args)
+const handleSelectionChange = val => emit("handleSelectionChange", val)
 
 defineExpose({ iTableRef })
 </script>
@@ -250,16 +225,15 @@ defineExpose({ iTableRef })
 .table-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   flex: 1;
   min-height: 400px;
 
   .table {
     flex: 1;
     position: relative;
-    height: 100%;
     :deep(.el-table) {
       position: absolute;
+      height: 100%;
     }
   }
 }
@@ -267,9 +241,6 @@ defineExpose({ iTableRef })
 .pagination-container {
   padding: 16px 0;
   display: flex;
-  &.hidden {
-    display: none;
-  }
 }
 
 .operate-group {
@@ -280,6 +251,7 @@ defineExpose({ iTableRef })
   .el-button + .custom-dropdown {
     margin-left: 16px;
     position: relative;
+
     &::before {
       content: "";
       position: absolute;
