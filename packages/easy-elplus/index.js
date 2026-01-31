@@ -1,10 +1,11 @@
 import Button from "@easy-elplus/components/button"
 import Descriptions from "@easy-elplus/components/descriptions"
 import Table from "@easy-elplus/components/table"
+import ImageUpload from "@easy-elplus/components/ImageUpload"
 import { setGlobalAppContext } from "@easy-elplus/utils"
 
 // 组件列表
-const components = [Button, Descriptions, Table]
+const components = [Button, Descriptions, Table, ImageUpload]
 
 // 是否已安装标识（防止重复 install）
 const INSTALLED_KEY = Symbol("INSTALLED_KEY")
