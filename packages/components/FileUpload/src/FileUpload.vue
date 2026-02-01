@@ -57,6 +57,8 @@
 import { ref, computed, watch } from "vue"
 import { ElMessage } from "element-plus"
 import { Upload, Document } from "@element-plus/icons-vue"
+import { isString } from "@easy-elplus/utils"
+import { UPDATE_MODEL_EVENT } from "@easy-elplus/constants"
 
 defineOptions({ name: "EasyFileUpload" })
 
@@ -114,7 +116,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(["update:modelValue"])
+const emit = defineEmits([UPDATE_MODEL_EVENT])
 
 const number = ref(0)
 const uploadList = ref([])
@@ -135,7 +137,7 @@ watch(
     if (val) {
       const list = Array.isArray(val) ? val : val.split(",")
       fileList.value = list.map((item, index) => {
-        if (typeof item === "string") {
+        if (isString(item)) {
           item = { name: getFileName(item), url: item, uid: new Date().getTime() + index }
         }
         return item
@@ -176,7 +178,7 @@ function handleExceed() {
 // 上传失败
 function handleUploadError(err) {
   number.value--
-  ElMessage.error(typeof err === "string" ? err : "上传文件失败")
+  ElMessage.error(isString(err) ? err : "上传文件失败")
 }
 
 // 上传成功回调
@@ -204,7 +206,7 @@ function handleUploadSuccess(res, file) {
 // 删除文件
 function handleDelete(index) {
   fileList.value.splice(index, 1)
-  emit("update:modelValue", listToString(fileList.value))
+  emit(UPDATE_MODEL_EVENT, listToString(fileList.value))
 }
 
 // 移除文件
@@ -212,7 +214,7 @@ function handleRemove(file) {
   const findex = fileList.value.findIndex(f => f.uid === file.uid)
   if (findex > -1) {
     fileList.value.splice(findex, 1)
-    emit("update:modelValue", listToString(fileList.value))
+    emit(UPDATE_MODEL_EVENT, listToString(fileList.value))
   }
 }
 
@@ -222,13 +224,13 @@ function uploadedSuccessfully() {
     fileList.value = fileList.value.filter(f => f.url !== undefined).concat(uploadList.value)
     uploadList.value = []
     number.value = 0
-    emit("update:modelValue", listToString(fileList.value))
+    emit(UPDATE_MODEL_EVENT, listToString(fileList.value))
   }
 }
 
 // 获取文件名称
 function getFileName(name) {
-  if (typeof name !== "string") return ""
+  if (!isString(name)) return ""
   return name.slice(name.lastIndexOf("/") + 1)
 }
 

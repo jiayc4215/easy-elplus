@@ -23,7 +23,7 @@
               <!-- 渲染render -->
               <template v-if="column.render">
                 <!-- 如果render返回的是字符串 -->
-                <div v-if="typeof getRenderContent(column, scope) === 'string'">
+                <div v-if="isString(getRenderContent(column, scope))">
                   <div v-html="getRenderContent(column, scope)"></div>
                 </div>
                 <!-- 如果render返回的是组件 -->
@@ -113,6 +113,7 @@
 import { computed, ref, useSlots, watch } from "vue"
 import { MoreFilled } from "@element-plus/icons-vue"
 import { scrollTo } from "./scrollTo"
+import { isString, isFunction } from "@easy-elplus/utils"
 
 defineOptions({ name: "EasyTable" })
 
@@ -175,19 +176,19 @@ const headSpanFit = column => {
 
 // 判断列是否显示
 const isColumnVisible = column => {
-  if (typeof column.show === "function") return column.show()
+  if (isFunction(column.show)) return column.show()
   return column.show !== false
 }
 
 // 获取渲染内容
 const getRenderContent = (column, scope) => {
-  return typeof column.render === "function" ? column.render(scope) : column.render
+  return isFunction(column.render) ? column.render(scope) : column.render
 }
 
 // 获取可见按钮
 const getVisibleButtons = row => {
   const list = (props.operates?.list || []).filter(item => {
-    return typeof item.show === "function" ? item.show(row) : item.show !== false
+    return isFunction(item.show) ? item.show(row) : item.show !== false
   })
   return list.length > 3
     ? {

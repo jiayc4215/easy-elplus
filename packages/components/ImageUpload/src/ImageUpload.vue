@@ -41,6 +41,8 @@
 import { ref, computed, watch } from "vue"
 import { ElMessage } from "element-plus"
 import { Plus } from "@element-plus/icons-vue"
+import { isString } from "@easy-elplus/utils"
+import { UPDATE_MODEL_EVENT } from "@easy-elplus/constants"
 
 defineOptions({ name: "EasyImageUpload" })
 
@@ -70,7 +72,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(["update:modelValue"])
+const emit = defineEmits([UPDATE_MODEL_EVENT])
 
 const number = ref(0)
 const uploadList = ref([])
@@ -93,7 +95,7 @@ watch(
     if (val) {
       const list = Array.isArray(val) ? val : val.split(",")
       fileList.value = list.map(item => {
-        if (typeof item === "string") {
+        if (isString(item)) {
           let url = item
           if (!/^https?:\/\//.test(url) && props.baseUrl) {
             url = props.baseUrl + item
@@ -160,7 +162,7 @@ function handleRemove(file) {
   const findex = fileList.value.findIndex(f => f.name === file.name)
   if (findex > -1) {
     fileList.value.splice(findex, 1)
-    emit("update:modelValue", listToString(fileList.value))
+    emit(UPDATE_MODEL_EVENT, listToString(fileList.value))
   }
 }
 
@@ -169,12 +171,12 @@ function uploadedSuccessfully() {
     fileList.value = fileList.value.filter(f => f.url !== undefined).concat(uploadList.value)
     uploadList.value = []
     number.value = 0
-    emit("update:modelValue", listToString(fileList.value))
+    emit(UPDATE_MODEL_EVENT, listToString(fileList.value))
   }
 }
 
 function handleUploadError(msg) {
-  ElMessage.error(typeof msg === "string" ? msg : "上传图片失败")
+  ElMessage.error(isString(msg) ? msg : "上传图片失败")
   number.value--
 }
 
@@ -184,7 +186,7 @@ function handlePictureCardPreview(file) {
 }
 
 function getFileName(name) {
-  if (typeof name !== "string") return ""
+  if (!isString(name)) return ""
   return name.slice(name.lastIndexOf("/") + 1)
 }
 

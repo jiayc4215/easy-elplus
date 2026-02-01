@@ -1,6 +1,6 @@
 import { h, ref, createApp, markRaw } from "vue"
 import { ElDialog, ElButton } from "element-plus"
-import { isString, getGlobalAppContext } from "@easy-elplus/utils"
+import { isString, isFunction, getGlobalAppContext } from "@easy-elplus/utils"
 
 /**
  *
@@ -73,11 +73,11 @@ export const useDialog = (component, componentProps = {}, modalProps = {}, conte
       try {
         const target = componentRef.value
         // 调用组件方法
-        if (target && methodKey && typeof target[methodKey] === "function") {
+        if (target && methodKey && isFunction(target[methodKey])) {
           await target[methodKey]()
         }
         // 调用 onConfirm
-        if (typeof onConfirm === "function") {
+        if (isFunction(onConfirm)) {
           await onConfirm(target)
         }
         // 返回 resolve
@@ -92,7 +92,7 @@ export const useDialog = (component, componentProps = {}, modalProps = {}, conte
 
     // 取消
     const handleCancel = () => {
-      if (typeof onCancel === "function") onCancel()
+      if (isFunction(onCancel)) onCancel()
       handleAction("reject", "cancel")
     }
 
@@ -134,7 +134,7 @@ export const useDialog = (component, componentProps = {}, modalProps = {}, conte
               footer: () => {
                 // 自定义 footer
                 if (footer) {
-                  return typeof footer === "function"
+                  return isFunction(footer)
                     ? footer({ close: handleCancel, confirm: handleConfirm, loading: loading.value })
                     : footer
                 }

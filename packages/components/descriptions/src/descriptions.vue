@@ -1,7 +1,7 @@
 <script setup>
 import { h, computed } from "vue"
 import { ElDescriptions, ElDescriptionsItem } from "element-plus"
-import { isObject } from "@easy-elplus/utils"
+import { isObject, isFunction } from "@easy-elplus/utils"
 import Comp from "./comp.vue"
 
 defineOptions({
@@ -20,7 +20,7 @@ const descriptionsData = defineModel("modelValue")
 // 内部处理单个列表的函数
 const normalizeItems = list => {
   return list.reduce((prev, item) => {
-    const isHidden = typeof item.hidden === "function" ? item.hidden(descriptionsData.value) : item.hidden
+    const isHidden = isFunction(item.hidden) ? item.hidden(descriptionsData.value) : item.hidden
 
     if (isHidden) return prev
 
@@ -54,7 +54,7 @@ const renderList = computed(() => {
     // 分组模式
     return props.items
       .filter(group => {
-        const isHidden = typeof group.hidden === "function" ? group.hidden(descriptionsData.value) : group.hidden
+        const isHidden = isFunction(group.hidden) ? group.hidden(descriptionsData.value) : group.hidden
         return !isHidden
       })
       .map(group => {
