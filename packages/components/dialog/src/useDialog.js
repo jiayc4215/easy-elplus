@@ -1,8 +1,17 @@
-import { h, ref, createApp, markRaw, getCurrentInstance } from "vue"
-import { ElDialog, ElButton, ElConfigProvider } from "element-plus"
+import { h, ref, createApp, markRaw } from "vue"
+import { ElDialog, ElButton } from "element-plus"
 import { isString, getGlobalAppContext } from "@easy-elplus/utils"
 
-export const useDialog = (component, componentProps = {}, modalProps = {}) => {
+/**
+ *
+ * @param {*} component 组件
+ * @param {*} componentProps 组件属性
+ * @param {*} modalProps 对话框属性
+ * @param {*} context 上下文
+ * @returns Promise
+ */
+export const useDialog = (component, componentProps = {}, modalProps = {}, context = null) => {
+  // 如果 component 是字符串，转换为渲染函数
   const contentComponent = isString(component) ? { render: () => h("div", component) } : markRaw(component)
 
   const {
@@ -24,8 +33,7 @@ export const useDialog = (component, componentProps = {}, modalProps = {}) => {
   const loading = ref(false)
   const componentRef = ref(null)
 
-  const callerInstance = getCurrentInstance()
-  const appContext = callerInstance?.appContext || getGlobalAppContext()
+  const appContext = context || getGlobalAppContext()
 
   const div = document.createElement("div")
   document.body.appendChild(div)
@@ -34,6 +42,7 @@ export const useDialog = (component, componentProps = {}, modalProps = {}) => {
     let app = null
     let isSettled = false // 标记 Promise 是否已完成，防止重复触发
 
+    // 销毁
     const destroy = () => {
       if (app) {
         app.unmount()
@@ -44,6 +53,7 @@ export const useDialog = (component, componentProps = {}, modalProps = {}) => {
       }
     }
 
+    // 关闭
     const close = () => {
       visible.value = false
     }
@@ -57,16 +67,20 @@ export const useDialog = (component, componentProps = {}, modalProps = {}) => {
       close()
     }
 
+    // 确认
     const handleConfirm = async () => {
       loading.value = true
       try {
         const target = componentRef.value
+        // 调用组件方法
         if (target && methodKey && typeof target[methodKey] === "function") {
           await target[methodKey]()
         }
+        // 调用 onConfirm
         if (typeof onConfirm === "function") {
           await onConfirm(target)
         }
+        // 返回 resolve
         await handleAction("resolve", target)
       } catch (e) {
         console.warn("[useDialog] 确认操作拦截:", e)
@@ -76,69 +90,70 @@ export const useDialog = (component, componentProps = {}, modalProps = {}) => {
       }
     }
 
+    // 取消
     const handleCancel = () => {
       if (typeof onCancel === "function") onCancel()
       handleAction("reject", "cancel")
     }
 
+    // DialogApp
     const DialogApp = {
       setup() {
         return () =>
           h(
-            ElConfigProvider,
-            { locale: appContext?.config?.globalProperties?.$ELEMENT?.locale },
+            ElDialog,
             {
-              default: () =>
-                h(
-                  ElDialog,
-                  {
-                    ...dialogProps,
-                    modelValue: visible.value,
-                    "onUpdate:modelValue": val => {
-                      visible.value = val
-                      if (!val && !isSettled) handleAction("reject", "closed")
-                    },
-                    title,
-                    draggable,
-                    destroyOnClose: true,
-                    onClosed: destroy, // 动画结束后彻底回收
-                    // 拦截右上角 X 和遮罩层点击
-                    beforeClose: done => {
-                      if (beforeClose) {
-                        beforeClose(() => {
-                          if (!isSettled) handleAction("reject", "closed")
-                          done()
-                        })
-                      } else {
-                        if (!isSettled) handleAction("reject", "closed")
-                        done()
-                      }
-                    }
-                  },
-                  {
-                    default: () => h(contentComponent, { ...componentProps, ref: componentRef }),
-                    footer: () => {
-                      if (footer) {
-                        return typeof footer === "function"
-                          ? footer({ close: handleCancel, confirm: handleConfirm, loading: loading.value })
-                          : footer
-                      }
-                      return h("div", { class: "dialog-footer" }, [
-                        showCancelButton && h(ElButton, { onClick: handleCancel }, () => cancelButtonText),
-                        showConfirmButton &&
-                          h(
-                            ElButton,
-                            {
-                              type: "primary",
-                              loading: loading.value,
-                              onClick: handleConfirm
-                            },
-                            () => confirmButtonText
-                          )
-                      ])
-                    }
-                  }
-                )
+              ...dialogProps,
+              modelValue: visible.value,
+              "onUpdate:modelValue": val => {
+                visible.value = val
+                if (!val && !isSettled) handleAction("reject", "closed")
+              },
+              title,
+              draggable,
+              destroyOnClose: true,
+              onClosed: destroy, // 动画结束后彻底回收
+              // 拦截右上角 X 和遮罩层点击
+              beforeClose: done => {
+                if (beforeClose) {
+                  beforeClose(() => {
+                    if (!isSettled) handleAction("reject", "closed")
+                    done()
+                  })
+                } else {
+                  if (!isSettled) handleAction("reject", "closed")
+                  done()
+                }
+              }
+            },
+            {
+              // 默认内容 渲染组件
+              default: () => h(contentComponent, { ...componentProps, ref: componentRef }),
+
+              // 底部内容
+              footer: () => {
+                // 自定义 footer
+                if (footer) {
+                  return typeof footer === "function"
+                    ? footer({ close: handleCancel, confirm: handleConfirm, loading: loading.value })
+                    : footer
+                }
+                return h("div", { class: "dialog-footer" }, [
+                  // 取消按钮
+                  showCancelButton && h(ElButton, { onClick: handleCancel }, () => cancelButtonText),
+                  // 确认按钮
+                  showConfirmButton &&
+                    h(
+                      ElButton,
+                      {
+                        type: "primary",
+                        loading: loading.value,
+                        onClick: handleConfirm
+                      },
+                      () => confirmButtonText
+                    )
+                ])
+              }
             }
           )
       }

@@ -1,8 +1,9 @@
 <script setup>
 import { h, ref, computed } from "vue"
 import { ElTag, ElMessage } from "element-plus"
-import { EasyTable } from "easy-elplus"
-import { Edit, Delete, View } from "@element-plus/icons-vue"
+// import { EasyTable } from "easy-elplus"
+import { EasyTable } from "test-elplus"
+import * as iconsVue from "@element-plus/icons-vue"
 
 // 表格引用
 const tableRef = ref(null)
@@ -94,7 +95,7 @@ const operates = {
     {
       label: "编辑",
       type: "primary",
-      icon: Edit,
+      icon: iconsVue.Edit,
       method: (row, index) => {
         ElMessage.info(`编辑第 ${index + 1} 行: ${row.name}`)
       }
@@ -102,7 +103,7 @@ const operates = {
     {
       label: "查看",
       type: "success",
-      icon: View,
+      icon: iconsVue.View,
       show: row => row.status === 1, // 条件显示
       method: row => {
         console.log("查看详情:", row)
@@ -111,7 +112,7 @@ const operates = {
     {
       label: "删除",
       type: "danger",
-      icon: Delete,
+      icon: iconsVue.Delete,
       confirm: true, // 更多按钮演示
       method: row => {
         ElMessage.error(`删除: ${row.name}`)

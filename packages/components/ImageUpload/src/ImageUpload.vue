@@ -19,7 +19,7 @@
     >
       <el-icon class="avatar-uploader-icon"><Plus /></el-icon>
     </el-upload>
-    <!-- 上传提示 -->
+
     <div v-if="showTip" class="el-upload__tip">
       请上传
       <template v-if="fileSize">
@@ -42,46 +42,31 @@ import { ref, computed, watch } from "vue"
 import { ElMessage } from "element-plus"
 import { Plus } from "@element-plus/icons-vue"
 
-defineOptions({
-  name: "EasyImageUpload"
-})
+defineOptions({ name: "EasyImageUpload" })
 
 const props = defineProps({
   modelValue: [String, Object, Array],
-  // 图片数量限制
-  limit: {
-    type: Number,
-    default: 5
+  limit: { type: Number, default: 5 },
+  fileSize: { type: Number, default: 5 },
+  fileType: { type: Array, default: () => ["png", "jpg", "jpeg"] },
+  isShowTip: { type: Boolean, default: true },
+  action: { type: String, required: true },
+  headers: { type: Object, default: () => ({}) },
+  baseUrl: { type: String, default: "" },
+
+  checkSuccess: {
+    type: Function,
+    default: res => res.code === 200 || res.success === true
   },
-  // 大小限制(MB)
-  fileSize: {
-    type: Number,
-    default: 5
-  },
-  // 文件类型, 例如['png', 'jpg', 'jpeg']
-  fileType: {
-    type: Array,
-    default: () => ["png", "jpg", "jpeg"]
-  },
-  // 是否显示提示
-  isShowTip: {
-    type: Boolean,
-    default: true
-  },
-  // 上传地址
-  action: {
+  // 自定义提取图片地址的路径，支持 "data.url" 这种深层嵌套
+  responsePath: {
     type: String,
-    required: true
+    default: "data"
   },
-  // 请求头
-  headers: {
-    type: Object,
-    default: () => ({})
-  },
-  // 图片基础路径
-  baseUrl: {
+  // 错误消息提取字段
+  errorField: {
     type: String,
-    default: ""
+    default: "msg"
   }
 })
 
@@ -96,20 +81,24 @@ const imageUploadRef = ref(null)
 
 const showTip = computed(() => props.isShowTip && (props.fileType || props.fileSize))
 
+// 深度解析对象属性 (例如把 res["data.imgUrl"] 转为 res.data.imgUrl)
+const getDeepValue = (obj, path) => {
+  if (!path) return obj
+  return path.split(".").reduce((acc, key) => (acc && acc[key] !== undefined ? acc[key] : undefined), obj)
+}
+
 watch(
   () => props.modelValue,
   val => {
     if (val) {
-      // 首先将值转为数组
       const list = Array.isArray(val) ? val : val.split(",")
-      // 然后将数组转为对象数组
       fileList.value = list.map(item => {
         if (typeof item === "string") {
           let url = item
-          if (url.indexOf("https://") === -1 && url.indexOf("http://") === -1 && props.baseUrl) {
+          if (!/^https?:\/\//.test(url) && props.baseUrl) {
             url = props.baseUrl + item
           }
-          item = { name: item, url: url }
+          item = { name: getFileName(item), url: url }
         }
         return item
       })
@@ -120,68 +109,61 @@ watch(
   { deep: true, immediate: true }
 )
 
-// 上传前校验
 function handleBeforeUpload(file) {
   let isImg = false
   if (props.fileType.length) {
-    let fileExtension = ""
-    if (file.name.lastIndexOf(".") > -1) {
-      fileExtension = file.name.slice(file.name.lastIndexOf(".") + 1)
-    }
-    isImg = props.fileType.some(type => {
-      if (file.type.indexOf(type) > -1) return true
-      if (fileExtension && fileExtension.toLowerCase().indexOf(type.toLowerCase()) > -1) return true
-      return false
-    })
+    const fileExtension = file.name.slice(file.name.lastIndexOf(".") + 1).toLowerCase()
+    isImg = props.fileType.map(t => t.toLowerCase()).includes(fileExtension)
   } else {
     isImg = file.type.indexOf("image") > -1
   }
 
   if (!isImg) {
-    ElMessage.error(`文件格式不正确, 请上传${props.fileType.join("/")}图片格式文件!`)
+    ElMessage.error(`格式不正确, 请上传${props.fileType.join("/")}图片!`)
     return false
   }
-  if (props.fileSize) {
-    const isLt = file.size / 1024 / 1024 < props.fileSize
-    if (!isLt) {
-      ElMessage.error(`上传图片大小不能超过 ${props.fileSize} MB!`)
-      return false
-    }
+  if (props.fileSize && file.size / 1024 / 1024 > props.fileSize) {
+    ElMessage.error(`大小不能超过 ${props.fileSize} MB!`)
+    return false
   }
   number.value++
   return true
 }
 
-// 文件个数超出
 function handleExceed() {
-  ElMessage.error(`上传文件数量不能超过 ${props.limit} 个!`)
+  ElMessage.error(`上传数量不能超过 ${props.limit} 个!`)
 }
 
-// 上传成功回调
+// 修改后的核心逻辑
 function handleUploadSuccess(res, file) {
-  // 暂时保留对常见结构的兼容
-  const url = res.data || res.url
-  if (res.code === 200 || res.success || !res.code) {
-    uploadList.value.push({ name: getFileName(url), url: url })
-    uploadedSuccessfully()
+  // 1. 使用传入的校验函数
+  if (props.checkSuccess(res)) {
+    // 2. 动态提取 URL
+    const url = getDeepValue(res, props.responsePath)
+
+    if (url) {
+      uploadList.value.push({ name: getFileName(url), url: url })
+      uploadedSuccessfully()
+    } else {
+      handleUploadError(`无法从响应中解析图片路径: ${props.responsePath}`)
+    }
   } else {
     number.value--
-    ElMessage.error(res.msg || "上传失败")
+    const errorMsg = getDeepValue(res, props.errorField) || "上传失败"
+    ElMessage.error(errorMsg)
     imageUploadRef.value.handleRemove(file)
     uploadedSuccessfully()
   }
 }
 
-// 删除图片
 function handleRemove(file) {
-  const findex = fileList.value.map(f => f.name).indexOf(file.name)
+  const findex = fileList.value.findIndex(f => f.name === file.name)
   if (findex > -1) {
     fileList.value.splice(findex, 1)
     emit("update:modelValue", listToString(fileList.value))
   }
 }
 
-// 上传结束处理
 function uploadedSuccessfully() {
   if (number.value > 0 && uploadList.value.length === number.value) {
     fileList.value = fileList.value.filter(f => f.url !== undefined).concat(uploadList.value)
@@ -191,45 +173,37 @@ function uploadedSuccessfully() {
   }
 }
 
-// 上传失败
-function handleUploadError() {
-  ElMessage.error("上传图片失败")
+function handleUploadError(msg) {
+  ElMessage.error(typeof msg === "string" ? msg : "上传图片失败")
+  number.value--
 }
 
-// 预览
 function handlePictureCardPreview(file) {
   dialogImageUrl.value = file.url
   dialogVisible.value = true
 }
 
-// 获取文件名称
 function getFileName(name) {
   if (typeof name !== "string") return ""
-  if (name.lastIndexOf("/") > -1) {
-    return name.slice(name.lastIndexOf("/") + 1)
-  } else {
-    return name
-  }
+  return name.slice(name.lastIndexOf("/") + 1)
 }
 
-// 对象转成指定字符串分隔
-function listToString(list, separator) {
-  let strs = ""
-  separator = separator || ","
-  for (let i in list) {
-    if (list[i].url && list[i].url.indexOf("blob:") !== 0) {
-      let url = list[i].url
+function listToString(list, separator = ",") {
+  return list
+    .filter(item => item.url && item.url.indexOf("blob:") !== 0)
+    .map(item => {
+      let url = item.url
       if (props.baseUrl && url.indexOf(props.baseUrl) === 0) {
         url = url.replace(props.baseUrl, "")
       }
-      strs += url + separator
-    }
-  }
-  return strs !== "" ? strs.substr(0, strs.length - 1) : ""
+      return url
+    })
+    .join(separator)
 }
 </script>
 
 <style scoped>
+/* 保持原有样式 */
 .component-upload-image :deep(.el-upload--picture-card) {
   width: 100px;
   height: 100px;

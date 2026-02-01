@@ -7,7 +7,8 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
-      "easy-elplus": path.resolve(__dirname, "../dist/easy-elplus")
+      "easy-elplus": path.resolve(__dirname, "../dist/easy-elplus"),
+      "test-elplus": path.resolve(__dirname, "../packages/components")
     }
   }
 })

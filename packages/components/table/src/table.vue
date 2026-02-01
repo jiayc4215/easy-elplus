@@ -13,27 +13,29 @@
       >
         <template v-for="(column, index) in processedHeaders" :key="index + (column.prop || '')">
           <el-table-column v-if="isColumnVisible(column)" :min-width="headSpanFit(column)" v-bind="column">
+            <!-- 渲染插槽  key是el-table-column插槽名称, value 是传递的插槽名称 -->
             <template v-for="(value, key) in column.slot" #[key]="scope">
-              <slot :name="value" v-bind="scope">
-                <div v-if="column.render && String(key) === 'default'" :key="index + 'inner'">
-                  <div v-if="typeof column.render === 'string'" v-html="column.render"></div>
-                  <component v-else :is="column.render" v-bind="scope"></component>
-                </div>
-              </slot>
+              <slot :name="value" v-bind="scope"> </slot>
             </template>
 
+            <!-- 渲染默认内容 无插槽 -->
             <template v-if="!column.slot" #default="scope">
+              <!-- 渲染render -->
               <template v-if="column.render">
+                <!-- 如果render返回的是字符串 -->
                 <div v-if="typeof getRenderContent(column, scope) === 'string'">
                   <div v-html="getRenderContent(column, scope)"></div>
                 </div>
+                <!-- 如果render返回的是组件 -->
                 <component v-else :is="column.render" v-bind="scope" :row="scope.row" :index="scope.$index" />
               </template>
 
+              <!-- 渲染formatter -->
               <template v-else-if="column.formatter">
                 <span v-html="column.formatter(scope.row, column)"></span>
               </template>
 
+              <!-- 渲染默认内容 -->
               <template v-else-if="!column.type">
                 <span>{{ scope.row[column.prop] ?? "--" }}</span>
               </template>
@@ -41,6 +43,7 @@
           </el-table-column>
         </template>
 
+        <!-- 操作列 -->
         <el-table-column
           v-if="operates.list?.length"
           label="操作"
@@ -50,6 +53,7 @@
         >
           <template #default="scope">
             <div class="operate-group">
+              <!-- 渲染外部按钮 -->
               <template v-for="(item, idx) in getVisibleButtons(scope.row).outside" :key="idx">
                 <el-button
                   v-bind="item"
@@ -64,6 +68,7 @@
                 </el-button>
               </template>
 
+              <!-- 渲染下拉按钮 -->
               <el-dropdown v-if="getVisibleButtons(scope.row).inside.length" class="custom-dropdown" trigger="click">
                 <el-button link size="small" class="custom-text">
                   <el-icon :size="18"><MoreFilled /></el-icon>
@@ -87,6 +92,7 @@
       </el-table>
     </div>
 
+    <!-- 分页 -->
     <div v-if="!hidden" class="pagination-container" :style="{ justifyContent: paginationJustify }">
       <el-pagination
         v-model:current-page="currentPage"
@@ -147,10 +153,12 @@ watch(
       // 匹配插槽逻辑保持不变
       Object.keys(slots).forEach(key => {
         const res = key.match(/^(\S+)-(\S+)/)
+
         if (res && res[2] === col.key) {
           col.slot = { ...col.slot, [res[1]]: res[0] }
         }
       })
+
       return col
     })
   },
@@ -158,20 +166,25 @@ watch(
 )
 
 /** 2. 工具函数 **/
+
+// 计算表头宽度
 const headSpanFit = column => {
   const labelLen = column?.label?.length || 0
   return Math.max(labelLen * 20, 100)
 }
 
+// 判断列是否显示
 const isColumnVisible = column => {
   if (typeof column.show === "function") return column.show()
   return column.show !== false
 }
 
+// 获取渲染内容
 const getRenderContent = (column, scope) => {
   return typeof column.render === "function" ? column.render(scope) : column.render
 }
 
+// 获取可见按钮
 const getVisibleButtons = row => {
   const list = (props.operates?.list || []).filter(item => {
     return typeof item.show === "function" ? item.show(row) : item.show !== false
@@ -188,34 +201,42 @@ const getVisibleButtons = row => {
 }
 
 /** 3. 分页计算属性 **/
+// 当前页码
 const currentPage = computed({
   get: () => props.page,
   set: val => emit("update:page", val)
 })
 
+// 每页条数
 const pageSize = computed({
   get: () => props.limit,
   set: val => emit("update:limit", val)
 })
 
+// 分页对齐方式
 const paginationJustify = computed(() => {
   const map = { left: "flex-start", center: "center", right: "flex-end" }
   return map[props.paginationPosition] || "flex-end"
 })
 
 /** 4. 事件处理 **/
+// 改变每页条数
 const handleSizeChange = val => {
   if (currentPage.value * val > props.total) currentPage.value = 1
   emit("pagination", { page: currentPage.value, limit: val })
   if (props.autoScroll) scrollTo(0, 800)
 }
 
+// 改变当前页
 const handleCurrentChange = val => {
   emit("pagination", { page: val, limit: pageSize.value })
   if (props.autoScroll) scrollTo(0, 800)
 }
 
+// 改变排序
 const sortChange = args => emit("sortChange", args)
+
+// 改变选择
 const handleSelectionChange = val => emit("handleSelectionChange", val)
 
 defineExpose({ iTableRef })
