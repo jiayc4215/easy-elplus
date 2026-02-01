@@ -15,5 +15,11 @@
   "packageManager": "pnpm@10.28.2",
   "devDependencies": {
     "vitepress": "2.0.0-alpha.15"
+  },
+  "dependencies": {
+    "@vitepress-demo-preview/component": "^2.6.1",
+    "@vitepress-demo-preview/plugin": "^1.4.1",
+    "@element-plus/icons-vue": "^2.3.2",
+    "element-plus": "^2.13.2"
   }
 }
