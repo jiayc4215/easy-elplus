@@ -5,7 +5,7 @@ const socialLinks = [{ icon: "github", link: "https://github.com/jiayc4215/form-
 import { defineConfig } from "vitepress"
 export default defineConfig({
   // 部署路径 注意： 部署到github pages 时，需要将 base 设置为 仓库名
-  base: "/element-plus-easy/",
+  base: "/easy-elplus/",
   lang: "zh-CN",
   lastUpdated: true, //显示最后更新时间
   ignoreDeadLinks: true, //忽略死链
