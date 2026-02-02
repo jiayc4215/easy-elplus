@@ -128,7 +128,10 @@ const props = defineProps({
   },
   limit: { type: Number, default: 20 },
   pageSizes: { type: Array, default: () => [10, 20, 30, 50] },
-  pagerCount: { type: Number, default: document.body.clientWidth < 992 ? 5 : 7 },
+  pagerCount: {
+    type: Number,
+    default: () => (typeof document !== "undefined" && document.body.clientWidth < 992 ? 5 : 7)
+  },
   layout: { type: String, default: "total, sizes, prev, pager, next, jumper" },
   background: { type: Boolean, default: true },
   autoScroll: { type: Boolean, default: true },

@@ -11,6 +11,11 @@ Math.easeInOutQuad = function (t, b, c, d) {
 
 // requestAnimationFrame for Smart Animating http://goo.gl/sx5sts
 var requestAnimFrame = (function () {
+  if (typeof window === "undefined") {
+    return function (callback) {
+      setTimeout(callback, 1000 / 60)
+    }
+  }
   return (
     window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
