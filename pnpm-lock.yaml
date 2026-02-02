@@ -129,7 +129,14 @@ importers:
         specifier: ^17.2.0
         version: 17.2.0
 
-  packages/components: {}
+  packages/components:
+    dependencies:
+      '@element-plus/icons-vue':
+        specifier: ^2.3.2
+        version: 2.3.2(vue@3.5.27(typescript@5.9.3))
+      element-plus:
+        specifier: ^2.13.2
+        version: 2.13.2(vue@3.5.27(typescript@5.9.3))
 
   packages/constants: {}
 

@@ -83,15 +83,10 @@ export default defineConfig({
     server: {
       port: 8090
     },
-    build: {
-      rollupOptions: {
-        external: ["vue", "element-plus", "@element-plus/icons-vue"]
-      }
-    },
 
     resolve: {
       alias: {
-        "easy-elplus": path.resolve(__dirname, "../../packages/components")
+        "easy-elplus": path.resolve(__dirname, "../../packages/easy-elplus")
       }
     }
   },
