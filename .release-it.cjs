@@ -16,7 +16,7 @@ module.exports = {
   },
   hooks: {
     "before:init": ["npm run lint:fix"], // 在初始化之前运行
-    "after:bump": "npm run build", // 在版本号增加之后运行
+    "after:bump": "node scripts/update-version.mjs && npm run build && git add packages/easy-elplus/package.json", // 在版本号增加之后运行
     "after:git:release": "echo After git push, before github release", // 在git push之后运行
     "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}." // 在release之后运行
   }
