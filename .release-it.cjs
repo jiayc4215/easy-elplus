@@ -6,7 +6,8 @@ module.exports = {
     push: true //是否自动推送
   },
   npm: {
-    publish: true //是否自动发布
+    publish: true, //是否自动发布
+    publishPath: "dist/easy-elplus"
   },
   github: {
     release: true, //是否自动创建release
