@@ -141,7 +141,7 @@ importers:
   packages/easy-elplus:
     dependencies:
       '@vue/shared':
-        specifier: 'catalog:'
+        specifier: ^3.5.27
         version: 3.5.27
       lodash-es:
         specifier: ^4.17.23
