@@ -3,13 +3,11 @@
     <h3>基础用法</h3>
     <div class="button-group">
       <el-button @click="openSimple">纯文本弹窗</el-button>
-      <el-button type="primary" @click="openHtml">HTML 内容</el-button>
       <el-button type="success" @click="openForm">表单弹窗</el-button>
     </div>
 
     <h3>高级用法</h3>
     <div class="button-group">
-      <el-button type="info" @click="openAsync">异步操作</el-button>
       <el-button type="warning" @click="openCustomFooter">自定义页脚</el-button>
       <el-button type="danger" @click="openBeforeClose">关闭前拦截</el-button>
     </div>
@@ -21,7 +19,8 @@
 <script setup>
 import { h, ref } from "vue"
 import { EasyDialog } from "easy-elplus"
-import { ElButton, ElMessage, ElMessageBox, ElInput, ElForm, ElFormItem } from "element-plus"
+import { ElButton, ElMessage, ElMessageBox } from "element-plus"
+import DialogFormContent from "./DialogFormContent.vue"
 
 const result = ref("")
 
@@ -36,76 +35,27 @@ const openSimple = () => {
     })
 }
 
-// HTML 内容
-const openHtml = () => {
-  EasyDialog(
-    {
-      render: () =>
-        h("div", [
-          h("h3", { style: "color: var(--el-color-primary); margin-bottom: 10px" }, "HTML 内容示例"),
-          h("p", { style: "line-height: 1.6" }, "这里可以使用 Vue 的渲染函数创建复杂的内容结构。"),
-          h("ul", { style: "margin-top: 10px" }, [
-            h("li", "支持任意 HTML 结构"),
-            h("li", "支持 Vue 组件"),
-            h("li", "支持样式定制")
-          ])
-        ])
-    },
-    {},
-    { title: "渲染函数示例" }
-  )
-}
-
 // 表单弹窗
 const openForm = () => {
-  const formData = ref({ name: "", email: "" })
-
   EasyDialog(
-    {
-      render: () =>
-        h(ElForm, { model: formData.value }, () => [
-          h(ElFormItem, { label: "姓名" }, () =>
-            h(ElInput, {
-              modelValue: formData.value.name,
-              "onUpdate:modelValue": val => (formData.value.name = val),
-              placeholder: "请输入姓名"
-            })
-          ),
-          h(ElFormItem, { label: "邮箱" }, () =>
-            h(ElInput, {
-              modelValue: formData.value.email,
-              "onUpdate:modelValue": val => (formData.value.email = val),
-              placeholder: "请输入邮箱"
-            })
-          )
-        ])
-    },
-    {},
+    DialogFormContent,
+    {}, // 组件 props
     {
       title: "填写信息",
       width: "500px",
-      onConfirm: () => {
-        result.value = `姓名: ${formData.value.name}, 邮箱: ${formData.value.email}`
+
+      // 可以在 onConfirm 中获取组件实例并调用其方法
+      onConfirm: async instance => {
+        instance.doSomethingInternal()
+        const data = await instance.validateForm()
+        result.value = `校验通过: 姓名: ${data.name}, 邮箱: ${data.email}`
         ElMessage.success("提交成功")
       }
     }
-  )
-}
-
-// 异步操作
-const openAsync = () => {
-  EasyDialog(
-    "点击确认后将模拟异步操作（2秒）",
-    {},
-    {
-      title: "异步操作演示",
-      onConfirm: async () => {
-        await new Promise(resolve => setTimeout(resolve, 2000))
-        result.value = "异步操作完成"
-        ElMessage.success("操作成功")
-      }
-    }
-  )
+  ).catch(e => {
+    if (e === "closed") return
+    ElMessage.warning("表单校验失败")
+  })
 }
 
 // 自定义页脚
@@ -162,10 +112,6 @@ const openBeforeClose = () => {
 </script>
 
 <style scoped>
-.dialog-demo {
-  padding: 20px;
-}
-
 h3 {
   margin: 20px 0 10px;
   font-size: 16px;

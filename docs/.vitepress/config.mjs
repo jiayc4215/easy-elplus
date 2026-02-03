@@ -1,7 +1,7 @@
 import { sidebar } from "./sidebar" // 确保路径正确
 import path from "path"
 import { containerPreview, componentPreview } from "@vitepress-demo-preview/plugin"
-const socialLinks = [{ icon: "github", link: "https://github.com/jiayc4215/form-render" }]
+const socialLinks = [{ icon: "github", link: "https://github.com/jiayc4215/easy-elplus" }]
 import { defineConfig } from "vitepress"
 export default defineConfig({
   // 部署路径 注意： 部署到github pages 时，需要将 base 设置为 仓库名
@@ -30,14 +30,15 @@ export default defineConfig({
     root: {
       lang: "zh-CN",
 
-      title: "Easy ElPlus",
+      title: "easy-elplus",
       description: "基于 Element Plus 的增强组件库",
       label: "简体中文",
       //主题配置
       themeConfig: {
         nav: [
           { text: "指南", link: "/guide/", activeMatch: "^/guide/" },
-          { text: "组件", link: "/components/button", activeMatch: "^/components/" }
+          { text: "组件", link: "/components/button", activeMatch: "^/components/" },
+          { text: "社区群", link: "/contact-me", activeMatch: "^/contact-me" }
         ],
         // 社交链接
         socialLinks: [
@@ -66,7 +67,7 @@ export default defineConfig({
     // 这里的 en 代表英语（路径带 /en/）
     en: {
       lang: "en-US",
-      title: "Easy ElPlus",
+      title: "easy-elplus",
       description: "Enhanced Component Library Based on Element Plus",
       label: "English",
       link: "/en/",
@@ -86,7 +87,7 @@ export default defineConfig({
 
     resolve: {
       alias: {
-        "easy-elplus": path.resolve(__dirname, "../../packages/easy-elplus")
+        "easy-elplus": path.resolve(__dirname, "../../packages/components")
       }
     }
   },

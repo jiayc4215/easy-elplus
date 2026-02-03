@@ -83,8 +83,8 @@ export const useDialog = (component, componentProps = {}, modalProps = {}, conte
         // 返回 resolve
         await handleAction("resolve", target)
       } catch (e) {
-        console.warn("[useDialog] 确认操作拦截:", e)
         isSettled = false // 失败时不沉淀状态，允许用户修正后重试
+        reject(e)
       } finally {
         loading.value = false
       }
@@ -93,7 +93,7 @@ export const useDialog = (component, componentProps = {}, modalProps = {}, conte
     // 取消
     const handleCancel = () => {
       if (isFunction(onCancel)) onCancel()
-      handleAction("reject", "cancel")
+      handleAction("reject", "closed")
     }
 
     // DialogApp

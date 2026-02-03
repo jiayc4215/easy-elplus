@@ -11,43 +11,6 @@ EasyFileUpload 是一个基于 Element Plus Upload 组件封装的文件上传�
 
 <preview path="../demo/file-upload-basic.vue" title="FileUpload 基础示例" description="展示文件上传的基本功能，包括类型校验和数量限制"></preview>
 
-## 基础用法
-
-通过 `v-model` 绑定文件地址，支持逗号分隔的字符串。
-
-```vue
-<template>
-  <easy-file-upload v-model="fileUrl" action="/api/upload" />
-</template>
-
-<script setup>
-import { ref } from "vue"
-import { EasyFileUpload } from "easy-elplus"
-
-const fileUrl = ref("")
-</script>
-```
-
-## 限制文件类型和大小
-
-可以通过 `file-type` 限制允许的文件扩展名，`file-size` 限制单个文件大小（MB）。
-
-```vue
-<template>
-  <easy-file-upload v-model="fileUrl" action="/api/upload" :file-type="['pdf', 'doc', 'docx']" :file-size="10" />
-</template>
-```
-
-## 自定义响应解析
-
-如果后端返回的数据结构比较复杂，可以使用 `response-path` 指定文件链接所在的路径。
-
-```vue
-<template>
-  <easy-file-upload v-model="fileUrl" action="/api/upload" response-path="data.url" error-field="message" />
-</template>
-```
-
 ## API
 
 ### Attributes

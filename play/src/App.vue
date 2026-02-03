@@ -17,7 +17,7 @@ const routes = [
   <el-container class="layout-container">
     <el-aside width="240px">
       <div class="logo">
-        <span class="logo-text">Easy ElPlus</span>
+        <span class="logo-text">easy-elplus</span>
         <span class="logo-dot">.</span>
       </div>
       <el-menu :default-active="$route.path" router class="side-menu">

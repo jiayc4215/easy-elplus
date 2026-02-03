@@ -1,14 +1,19 @@
 <template>
   <div class="descriptions-demo">
     <h3>基础用法</h3>
-    <easy-descriptions :items="basicItems" v-model="formData" :column="2" border />
+    <easy-descriptions :items="basicItems" v-model="formData" :column="2" border> </easy-descriptions>
 
     <h3 style="margin-top: 30px">分组模式</h3>
-    <easy-descriptions :items="groupedItems" v-model="formData" border />
+    <easy-descriptions :items="groupedItems" v-model="formData" border>
+      <template #gender>
+        <el-tag type="success" size="large">
+          {{ formData.gender == 1 ? "男" : "女" }}
+        </el-tag>
+      </template>
+    </easy-descriptions>
 
     <div class="actions">
       <el-button type="primary" @click="handleSubmit">提交数据</el-button>
-      <el-button @click="handleReset">重置</el-button>
     </div>
 
     <div v-if="submitResult" class="result">
@@ -44,28 +49,35 @@ const basicItems = [
     value: {
       id: "username",
       components: "el-input",
-      placeholder: "请输入用户名"
+      props: {
+        placeholder: "请输入用户名"
+      }
     }
   },
   {
     label: "性别",
     value: {
       id: "gender",
-      components: "el-radio-group",
-      options: [
-        { label: "男", value: 1 },
-        { label: "女", value: 0 }
-      ]
+      components: "el-switch",
+      props: {
+        activeText: "男",
+        inactiveText: "女",
+        activeValue: 1,
+        inactiveValue: 0
+      }
     }
   },
-  { label: "年龄", value: "age" },
+
+  { label: "年龄", value: "age", hidden: data => data.gender == 0 },
   { label: "手机号", value: "tel" },
   {
     label: "邮箱",
     value: {
       id: "email",
       components: "el-input",
-      placeholder: "请输入邮箱"
+      props: {
+        placeholder: "请输入邮箱"
+      }
     }
   },
   { label: "地址", value: "address", span: 2 }
@@ -80,12 +92,7 @@ const groupedItems = [
       { label: "用户名", value: "username" },
       {
         label: "性别",
-        value: {
-          id: "gender",
-          components: "el-tag",
-          type: formData.value.gender ? "primary" : "danger",
-          render: () => (formData.value.gender ? "男" : "女")
-        }
+        value: "gender"
       },
       { label: "年龄", value: "age" },
       { label: "手机号", value: "tel" }
@@ -110,8 +117,10 @@ const groupedItems = [
         value: {
           id: "remark",
           components: "el-input",
-          type: "textarea",
-          rows: 3
+          props: {
+            type: "textarea",
+            rows: 3
+          }
         },
         span: 2
       }
@@ -123,39 +132,13 @@ const handleSubmit = () => {
   submitResult.value = JSON.stringify(formData.value, null, 2)
   ElMessage.success("提交成功")
 }
-
-const handleReset = () => {
-  formData.value = {
-    username: "",
-    gender: 1,
-    age: 0,
-    tel: "",
-    email: "",
-    address: "",
-    isVip: false,
-    vipLevel: "",
-    remark: ""
-  }
-  submitResult.value = ""
-  ElMessage.info("已重置")
-}
 </script>
 
 <style scoped>
-.descriptions-demo {
-  padding: 20px;
-}
-
 h3 {
   margin: 20px 0 10px;
   font-size: 16px;
   color: #303133;
-}
-
-.actions {
-  margin-top: 20px;
-  display: flex;
-  gap: 12px;
 }
 
 .result {

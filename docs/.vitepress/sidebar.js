@@ -39,6 +39,10 @@ export const sidebar = {
         { text: "ImageUpload 图片上传", link: "/components/image-upload" },
         { text: "FileUpload 文件上传", link: "/components/file-upload" }
       ]
+    },
+    {
+      text: "社区群",
+      link: "/contact-me/"
     }
   ]
 }

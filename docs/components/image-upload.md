@@ -11,47 +11,6 @@ EasyImageUpload 是一个基于 Element Plus Upload 组件封装的图片上传�
 
 <preview path="../demo/image-upload-basic.vue" title="ImageUpload 基础示例" description="展示图片上传的基本功能，包括预览和自动解析"></preview>
 
-## 基础用法
-
-通过 `v-model` 绑定图片地址，支持逗号分隔的字符串。
-
-```vue
-<template>
-  <easy-image-upload v-model="imageUrl" action="/api/upload" />
-</template>
-
-<script setup>
-import { ref } from "vue"
-import { EasyImageUpload } from "easy-elplus"
-
-const imageUrl = ref("")
-</script>
-```
-
-## 多图上传
-
-设置 `limit` 属性可以限制上传图片的数量。
-
-```vue
-<template>
-  <easy-image-upload v-model="imageList" action="/api/upload" :limit="3" />
-</template>
-
-<script setup>
-import { ref } from "vue"
-
-const imageList = ref("") // 多个图片以逗号分隔
-</script>
-```
-
-## 自定义响应结构
-
-```vue
-<template>
-  <easy-image-upload v-model="imageUrl" action="/api/upload" response-path="result.imageUrl" error-field="errorMsg" />
-</template>
-```
-
 ## API
 
 ### Attributes

@@ -13,6 +13,7 @@
         stripe: true,
         highlightCurrentRow: true
       }"
+      :auto-scroll="false"
       pagination-position="right"
       @handleSelectionChange="handleSelectionChange"
       @pagination="onPagination"
@@ -40,7 +41,6 @@ import { ElTag, ElMessage } from "element-plus"
 import { EasyTable } from "easy-elplus"
 import { Edit, Delete, View } from "@element-plus/icons-vue"
 
-const tableRef = ref(null)
 const selectedRows = ref([])
 
 // 模拟数据
@@ -85,7 +85,7 @@ const tableData = ref([
 
 const page = ref(1)
 const limit = ref(10)
-const total = ref(100)
+const total = ref(30)
 
 // 列配置
 const columns = computed(() => [
@@ -165,13 +165,6 @@ const onPagination = ({ page: p, limit: l }) => {
 </script>
 
 <style scoped>
-.table-demo {
-  padding: 20px;
-  height: 500px;
-  display: flex;
-  flex-direction: column;
-}
-
 .selection-info {
   margin-top: 15px;
   padding: 10px;

@@ -1,6 +1,6 @@
 # 快速开始
 
-本节将介绍如何在项目中使用 Easy ElPlus。
+本节将介绍如何在项目中使用 easy-elplus。
 
 ## 前置要求
 
@@ -29,7 +29,7 @@ app.mount("#app")
 
 ## 按需引入
 
-Easy ElPlus 支持按需引入，可以减小打包体积。
+easy-elplus 支持按需引入，可以减小打包体积。
 
 ### 手动引入
 
@@ -63,26 +63,9 @@ const loading = ref(false)
 </script>
 ```
 
-## 全局配置
-
-你可以在引入 Easy ElPlus 时进行全局配置：
-
-```javascript
-import { createApp } from "vue"
-import EasyElPlus from "easy-elplus"
-
-const app = createApp(App)
-
-app.use(EasyElPlus, {
-  // 全局配置选项
-  size: "default",
-  zIndex: 3000
-})
-```
-
 ## 开始使用
 
-现在你可以开始使用 Easy ElPlus 了！查看各个组件的文档了解更多用法：
+现在你可以开始使用 easy-elplus 了！查看各个组件的文档了解更多用法：
 
 - [Button 按钮](/components/button)
 - [Dialog 对话框](/components/dialog)

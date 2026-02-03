@@ -8,7 +8,7 @@
 
 ## 使用包管理器
 
-我们建议使用包管理器（如 npm、yarn 或 pnpm）安装 Easy ElPlus。
+我们建议使用包管理器（如 npm、yarn 或 pnpm）安装 easy-elplus。
 
 ::: code-group
 
@@ -28,7 +28,7 @@ pnpm add easy-elplus
 
 ## 安装 Element Plus
 
-Easy ElPlus 是基于 Element Plus 构建的，因此你需要先安装 Element Plus：
+easy-elplus 是基于 Element Plus 构建的，因此你需要先安装 Element Plus：
 
 ::: code-group
 
@@ -48,14 +48,14 @@ pnpm add element-plus
 
 ## 从源码构建
 
-如果你想从源码构建 Easy ElPlus：
+如果你想从源码构建 easy-elplus：
 
 ```bash
 # 克隆仓库
-git clone https://github.com/jiayc4215/element-plus-easy.git
+git clone https://github.com/jiayc4215/easy-elplus.git
 
 # 进入项目目录
-cd element-plus-easy
+cd easy-elplus
 
 # 安装依赖
 pnpm install
@@ -68,7 +68,7 @@ pnpm build
 
 ## 开发环境
 
-如果你想参与 Easy ElPlus 的开发：
+如果你想参与 easy-elplus 的开发：
 
 ```bash
 # 安装依赖
@@ -83,4 +83,4 @@ pnpm docs:dev
 
 ## 下一步
 
-安装完成后，请查看 [快速开始](/guide/quickstart) 了解如何在项目中使用 Easy ElPlus。
+安装完成后，请查看 [快速开始](/guide/quickstart) 了解如何在项目中使用 easy-elplus。

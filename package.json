@@ -12,7 +12,7 @@
     "clean:all": "pnpm -r exec rm -rf node_modules && rm -rf node_modules && pnpm store prune",
     "lint": "eslint . --ext .js,.mjs,.cjs,.vue --config ./eslint.config.js",
     "lint:fix": "eslint . --ext .js,.mjs,.cjs,.vue --fix --config ./eslint.config.js",
-    "lint:prettier": "prettier --write \"**/*.{js,ts,mjs,cjs,json,tsx,css,less,scss,vue,html,md}\"",
+    "lint:prettier": "prettier --write \"**/*.{js,mjs,cjs,json,css,less,scss,vue,html,md}\"",
     "prepare": "husky",
     "commit": "git cz",
     "up": "taze major -r -w -I -l",
