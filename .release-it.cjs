@@ -7,7 +7,7 @@ module.exports = {
   },
   npm: {
     publish: true, //是否自动发布
-    publishPath: "dist/easy-elplus"
+    publishPath: "./dist/easy-elplus" // 添加 ./ 明确它是本地目录
   },
   github: {
     release: true, //是否自动创建release
