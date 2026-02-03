@@ -11,7 +11,10 @@
   "license": "ISC",
   "packageManager": "pnpm@10.28.2",
   "dependencies": {
-    "element-plus": "^2.13.2",
-    "@element-plus/icons-vue": "^2.3.2"
+    "lodash-es": "^4.17.23"
+  },
+  "devDependencies": {
+    "@element-plus/icons-vue": "^2.3.2",
+    "element-plus": "^2.13.2"
   }
 }

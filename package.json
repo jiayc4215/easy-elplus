@@ -22,12 +22,9 @@
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.28.2",
-  "dependencies": {
-    "lodash-es": "^4.17.23"
-  },
   "devDependencies": {
-    "@commitlint/cli": "^20.4.0",
-    "@commitlint/config-conventional": "^20.4.0",
+    "@commitlint/cli": "^20.4.1",
+    "@commitlint/config-conventional": "^20.4.1",
     "@easy-elplus/components": "workspace:^",
     "@easy-elplus/constants": "workspace:^",
     "@easy-elplus/eslint-config": "workspace:^",

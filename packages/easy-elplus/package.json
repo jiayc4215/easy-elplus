@@ -44,7 +44,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@vue/shared": "^3.5.27",
+    "@vue/shared": "catalog:",
     "lodash-es": "^4.17.23"
   },
   "engines": {
