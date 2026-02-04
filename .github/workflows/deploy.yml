@@ -1,15 +1,15 @@
-name: Build and Deploy
-on: [push]
+name: Build and Deploy # workflow 的名称
+on: [push] # 触发条件
 permissions:
   contents: write
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v6
+jobs: # 任务的集合
+  build-and-deploy: # 任务的名称
+    runs-on: ubuntu-latest # 运行环境
+    steps: # 任务的步骤
+      - name: Checkout 🛎️ # 步骤的名称
+        uses: actions/checkout@v6 # 步骤的使用的 action
 
-      - name: Install and Build 🔧 # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
+      - name: Install and Build 🔧 # 运行的命令
         run: |
           npm install -g pnpm
           pnpm install
