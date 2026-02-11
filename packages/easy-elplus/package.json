@@ -19,6 +19,7 @@
     "url": "https://github.com/jiayc4215/easy-elplus/issues"
   },
   "license": "MIT",
+  "sideEffects": false,
   "main": "lib/index.js",
   "module": "es/index.mjs",
   "unpkg": "dist/index.full.js",
@@ -44,15 +45,14 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@vue/shared": "^3.5.27",
     "lodash-es": "^4.17.23"
+  },
+  "peerDependencies": {
+    "element-plus": "^2.9.4"
   },
   "engines": {
     "node": ">= 4.0.0",
     "npm": ">= 3.0.0"
-  },
-  "peerDependencies": {
-    "vue": "^3.3.0"
   },
   "browserslist": [
     "> 1%",

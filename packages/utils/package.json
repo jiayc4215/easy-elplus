@@ -9,8 +9,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.28.2",
-  "dependencies": {
-    "@vue/shared": "catalog:"
-  }
+  "packageManager": "pnpm@10.29.2",
+  "dependencies": {}
 }

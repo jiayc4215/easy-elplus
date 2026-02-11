@@ -1,4 +1,4 @@
-import { NOOP } from "@vue/shared"
+import { NOOP } from "../type"
 /**
  * 给组件添加 install 方法，支持主组件 + 附加组件
  * @param {Object} main 主组件
