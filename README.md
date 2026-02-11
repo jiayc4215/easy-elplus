@@ -63,6 +63,7 @@ const handleAsync = async () => {
 
 - [组件文档](https://jiayc4215.github.io/easy-elplus/)
 - [vue3表单渲染器](https://jiayc4215.github.io/form-render/)
+- [vue3扩展指令](https://github.com/jiayc4215/directives-expand/)
 
 ## Inspiration
 

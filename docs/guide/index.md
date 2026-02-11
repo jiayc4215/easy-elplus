@@ -7,6 +7,7 @@
 ## 搭配使用
 
 - [vue3表单渲染器](https://jiayc4215.github.io/form-render/) vue3表单渲染器
+- [vue3扩展指令](https://github.com/jiayc4215/directives-expand/) vue3扩展指令
 
 ## easy-elplus 是什么？
 

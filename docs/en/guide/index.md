@@ -7,6 +7,7 @@
 ## Use with
 
 - [Vue3 Form Renderer](https://jiayc4215.github.io/form-render/) Vue3 Form Renderer
+- [Vue3 Directives](https://github.com/jiayc4215/directives-expand/) Vue3 Directives
 
 ## What is easy-elplus?
 
