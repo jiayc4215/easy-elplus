@@ -27,7 +27,14 @@ export const buildFullEntry = async () => {
       // 配置插件
       vue(),
       nodeResolve(),
-      postcss()
+      // https://github.com/egoist/rollup-plugin-postcss/issues/463 暂时不支持  Dart Sass
+      postcss({
+        use: {
+          sass: {
+            silenceDeprecations: ["legacy-js-api"]
+          }
+        }
+      })
     ],
     // 排除不进行打包的 npm 包，例如 Vue，以便减少包的体积
     external: ["vue", "element-plus", "@element-plus/icons-vue"]

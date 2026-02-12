@@ -1,11 +1,12 @@
 <script setup>
+import { computed } from "vue"
 import { useDynamicComponent } from "@easy-elplus/hooks"
 
 defineOptions({
   name: "EasyDescriptionsComp"
 })
 
-defineProps({
+const componentProps = defineProps({
   id: {
     type: String,
     default: ""
@@ -21,19 +22,27 @@ defineProps({
 })
 
 const descriptionsData = defineModel("modelValue")
-
 const { getComponent } = useDynamicComponent()
+
+// 1. 动态计算要渲染的组件
+const currentComponent = computed(() => {
+  return componentProps.id
+    ? getComponent(componentProps.components, descriptionsData.value)
+    : getComponent(componentProps.components)
+})
+
+// 2. 动态构建 Model 绑定 (仅在有 id 时绑定)
+const dynamicModel = computed(() => {
+  return componentProps.id ? { modelValue: descriptionsData.value[componentProps.id] } : {}
+})
 </script>
 
 <template>
   <slot :name="components">
     <component
-      v-if="id"
-      :is="getComponent(components, descriptionsData)"
-      v-model="descriptionsData[id]"
-      v-bind="props"
+      :is="currentComponent"
+      v-bind="{ ...dynamicModel, ...props }"
+      @update:modelValue="val => id && (descriptionsData[id] = val)"
     />
-
-    <component v-else :is="getComponent(components)" v-bind="props" />
   </slot>
 </template>
