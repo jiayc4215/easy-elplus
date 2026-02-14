@@ -111,6 +111,16 @@
 
 <script setup>
 import { computed, ref, useSlots, watch } from "vue"
+import {
+  ElTable,
+  ElTableColumn,
+  ElButton,
+  ElIcon,
+  ElDropdown,
+  ElDropdownMenu,
+  ElDropdownItem,
+  ElPagination
+} from "element-plus"
 import { MoreFilled } from "@element-plus/icons-vue"
 import { scrollTo } from "./scrollTo"
 import { isString, isFunction } from "@easy-elplus/utils"

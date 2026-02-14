@@ -55,7 +55,7 @@
 
 <script setup>
 import { ref, computed, watch } from "vue"
-import { ElMessage } from "element-plus"
+import { ElMessage, ElUpload, ElButton, ElIcon, ElLink } from "element-plus"
 import { Upload, Document } from "@element-plus/icons-vue"
 import { isString } from "@easy-elplus/utils"
 import { UPDATE_MODEL_EVENT } from "@easy-elplus/constants"
