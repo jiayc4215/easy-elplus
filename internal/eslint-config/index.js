@@ -21,7 +21,9 @@ export default [
     languageOptions: {
       globals: {
         ...globals.browser,
-        ...globals.node
+        ...globals.node,
+        ElMessage: true,
+        ElMessageBox: true
       }
     },
     rules: {

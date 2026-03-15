@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.29.2",
-  "dependencies": {
+  "peerDependencies": {
     "lodash-es": "^4.17.23"
   },
   "devDependencies": {

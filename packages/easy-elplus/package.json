@@ -44,11 +44,9 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "dependencies": {
-    "lodash-es": "^4.17.23"
-  },
   "peerDependencies": {
-    "element-plus": "^2.9.4"
+    "element-plus": "^2.9.4",
+    "lodash-es": "^4.17.23"
   },
   "engines": {
     "node": ">= 4.0.0",

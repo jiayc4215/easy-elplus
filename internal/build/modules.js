@@ -4,6 +4,7 @@ import { rollup } from "rollup"
 import glob from "fast-glob"
 import vue from "@vitejs/plugin-vue"
 import postcss from "rollup-plugin-postcss"
+import IconsResolver from "unplugin-icons/resolver"
 
 import { nodeResolve } from "@rollup/plugin-node-resolve"
 
@@ -16,6 +17,10 @@ const pkgRoot = resolve(projRoot, "packages")
 const buildOutput = resolve(projRoot, "dist")
 const epOutput = resolve(buildOutput, "easy-elplus")
 const epRoot = resolve(pkgRoot, "easy-elplus")
+import Icons from "unplugin-icons/vite"
+import Components from "unplugin-vue-components/vite"
+import { ElementPlusResolver } from "unplugin-vue-components/resolvers"
+import AutoImport from "unplugin-auto-import/vite"
 
 // 排除 node_modules 目录
 const excludeFiles = files => {
@@ -45,10 +50,40 @@ export const buildModules = async () => {
             silenceDeprecations: ["legacy-js-api"]
           }
         }
+      }),
+      AutoImport({
+        // Auto import functions from Element Plus, e.g. ElMessage, ElMessageBox... (with style)
+        // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
+        resolvers: [
+          ElementPlusResolver(),
+
+          // Auto import icon components
+          // 自动导入图标组件
+          IconsResolver({
+            prefix: "Icon"
+          })
+        ]
+      }),
+
+      Components({
+        resolvers: [
+          // Auto register icon components
+          // 自动注册图标组件
+          IconsResolver({
+            enabledCollections: ["ep"]
+          }),
+          // Auto register Element Plus components
+          // 自动导入 Element Plus 组件
+          ElementPlusResolver()
+        ]
+      }),
+
+      Icons({
+        autoInstall: true
       })
     ],
     // 排除不进行打包的 npm 包，例如 Vue，以便减少包的体积
-    external: ["vue", "element-plus", "@element-plus/icons-vue"]
+    external: ["vue", /^element-plus($|\/)/, "@element-plus/icons-vue", "lodash-es"]
   })
   // 配置输出文件格式
   bundle.write({

@@ -1,6 +1,9 @@
 import { h, ref, createApp, markRaw } from "vue"
 import { ElDialog, ElButton } from "element-plus"
 import { isString, isFunction, getGlobalAppContext } from "@easy-elplus/utils"
+import "element-plus/es/components/base/style/css"
+import "element-plus/es/components/button/style/css"
+import "element-plus/es/components/dialog/style/css"
 
 /**
  *

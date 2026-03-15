@@ -1,6 +1,6 @@
 <script setup>
 import { h, computed } from "vue"
-import { ElDescriptions, ElDescriptionsItem } from "element-plus"
+
 import { isObject, isFunction } from "@easy-elplus/utils"
 import Comp from "./comp.vue"
 
