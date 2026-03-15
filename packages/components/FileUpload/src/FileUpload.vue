@@ -17,7 +17,7 @@
     >
       <!-- 上传按钮 -->
       <el-button type="primary">
-        <el-icon class="el-icon--left"><Upload /></el-icon>
+        <el-icon class="el-icon--left"><i-ep-upload /></el-icon>
         选取文件
       </el-button>
     </el-upload>
@@ -42,7 +42,7 @@
         class="el-upload-list__item ele-upload-list__item-content"
       >
         <el-link :href="getFileUrl(file.url)" underline="never" target="_blank">
-          <el-icon class="el-icon--left"><Document /></el-icon>
+          <el-icon class="el-icon--left"><i-ep-document /></el-icon>
           <span>{{ getFileName(file.name) }}</span>
         </el-link>
         <div class="ele-upload-list__item-content-action">

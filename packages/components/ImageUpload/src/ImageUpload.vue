@@ -17,7 +17,7 @@
       :on-preview="handlePictureCardPreview"
       :class="{ hide: fileList.length >= limit }"
     >
-      <el-icon class="avatar-uploader-icon"><Plus /></el-icon>
+      <el-icon class="avatar-uploader-icon"><i-ep-plus /></el-icon>
     </el-upload>
 
     <div v-if="showTip" class="el-upload__tip">

@@ -71,7 +71,7 @@
               <!-- 渲染下拉按钮 -->
               <el-dropdown v-if="getVisibleButtons(scope.row).inside.length" class="custom-dropdown" trigger="click">
                 <el-button link size="small" class="custom-text">
-                  <el-icon :size="18"><MoreFilled /></el-icon>
+                  <el-icon :size="18"><i-ep-more-filled /></el-icon>
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>

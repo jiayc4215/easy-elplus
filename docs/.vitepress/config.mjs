@@ -84,7 +84,10 @@ export default defineConfig({
     server: {
       port: 8090
     },
-
+    //  element-plus 按需引入时 因为ssr不能识别 .css 文件，所以需要
+    ssr: {
+      noExternal: ["element-plus"]
+    },
     resolve: {
       alias: {
         "easy-elplus": path.resolve(__dirname, "../../packages/components")

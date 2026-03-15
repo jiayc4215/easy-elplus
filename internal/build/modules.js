@@ -67,6 +67,8 @@ export const buildModules = async () => {
 
       Components({
         resolvers: [
+          // 使用 unplugin-icons 和 unplugin-auto-import 从 iconify 中自动导入任何图标集。 您可以参考此模板。
+          //@see https://github.com/sxzz/element-plus-best-practices/blob/db2dfc983ccda5570033a0ac608a1bd9d9a7f658/vite.config.ts#L21-L58
           // Auto register icon components
           // 自动注册图标组件
           IconsResolver({
@@ -82,6 +84,8 @@ export const buildModules = async () => {
         autoInstall: true
       })
     ],
+    // 使用按需引入Element Plus 时 需要 使用正则匹配
+    //@see  https://github.com/unplugin/unplugin-vue-components/issues/311#issuecomment-4060193689
     // 排除不进行打包的 npm 包，例如 Vue，以便减少包的体积
     external: ["vue", /^element-plus($|\/)/, "@element-plus/icons-vue", "lodash-es"]
   })
