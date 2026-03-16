@@ -1,8 +1,8 @@
 <script setup>
 import { h, ref, computed } from "vue"
 import { ElTag, ElMessage } from "element-plus"
-// import { EasyTable } from "easy-elplus"
-import { EasyTable } from "test-elplus"
+import { EasyTable } from "easy-elplus"
+
 import * as iconsVue from "@element-plus/icons-vue"
 
 // 表格引用

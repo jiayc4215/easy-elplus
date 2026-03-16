@@ -3,6 +3,11 @@ import path from "path"
 import { containerPreview, componentPreview } from "@vitepress-demo-preview/plugin"
 const socialLinks = [{ icon: "github", link: "https://github.com/jiayc4215/easy-elplus" }]
 import { defineConfig } from "vitepress"
+import Icons from "unplugin-icons/vite"
+import Components from "unplugin-vue-components/vite"
+import { ElementPlusResolver } from "unplugin-vue-components/resolvers"
+import AutoImport from "unplugin-auto-import/vite"
+import IconsResolver from "unplugin-icons/resolver"
 export default defineConfig({
   // 部署路径 注意： 部署到github pages 时，需要将 base 设置为 仓库名
   base: "/easy-elplus/",
@@ -81,6 +86,40 @@ export default defineConfig({
     }
   },
   vite: {
+    plugins: [
+      AutoImport({
+        // Auto import functions from Element Plus, e.g. ElMessage, ElMessageBox... (with style)
+        // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
+        resolvers: [
+          ElementPlusResolver(),
+
+          // Auto import icon components
+          // 自动导入图标组件
+          IconsResolver({
+            prefix: "Icon"
+          })
+        ]
+      }),
+
+      Components({
+        resolvers: [
+          // 使用 unplugin-icons 和 unplugin-auto-import 从 iconify 中自动导入任何图标集。 您可以参考此模板。
+          //@see https://github.com/sxzz/element-plus-best-practices/blob/db2dfc983ccda5570033a0ac608a1bd9d9a7f658/vite.config.ts#L21-L58
+          // Auto register icon components
+          // 自动注册图标组件
+          IconsResolver({
+            enabledCollections: ["ep"]
+          }),
+          // Auto register Element Plus components
+          // 自动导入 Element Plus 组件
+          ElementPlusResolver()
+        ]
+      }),
+
+      Icons({
+        autoInstall: true
+      })
+    ],
     server: {
       port: 8090
     },
