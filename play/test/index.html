@@ -1,31 +1,45 @@
-<!doctype html>
-<html lang="en">
+HTMLResult Skip Results Iframe EDIT ON
+<html>
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>浏览器引用组件库包</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <script src="https://unpkg.com/vue@3"></script>
+    <!-- import CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+    <!-- import JavaScript -->
+    <script src="https://unpkg.com/element-plus"></script>
+    <script src="../../dist//easy-elplus//dist//index.full.js"></script>
+    <title>Element Plus demo</title>
   </head>
 
   <body>
     <div id="app">
-      <easy-button></easy-button>
+      <easy-image-upload
+        v-model="imageList"
+        action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+        :limit="3"
+        :file-size="2"
+      />
+      <div style="margin-top: 20px">绑定值: {{ imageList }}</div>
     </div>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script src="../../dist//easy-elplus//dist//index.full.js"></script>
+
     <script>
-      const { createApp, ref } = Vue
+      // 挂载element-plus的message
+      window.ElMessage = ElementPlus.ElMessage
       const App = {
-        setup() {
-          const message = ref("浏览器引用组件库包")
+        data() {
           return {
-            message
+            message: "Hello Element Plus"
           }
         }
       }
+
       const app = Vue.createApp(App)
-      app.use(EasyElPlus)
+      app.use(ElementPlus)
+      app.use(EasyElPlus.default)
       app.mount("#app")
     </script>
   </body>
 </html>
+
+Resources

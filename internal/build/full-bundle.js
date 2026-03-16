@@ -4,6 +4,9 @@ import postcss from "rollup-plugin-postcss"
 import { nodeResolve } from "@rollup/plugin-node-resolve"
 import { fileURLToPath } from "url"
 import { resolve, dirname } from "path"
+import IconsResolver from "unplugin-icons/resolver"
+import Icons from "unplugin-icons/vite"
+import Components from "unplugin-vue-components/vite"
 
 const __filenameNew = fileURLToPath(import.meta.url)
 const __dirnameNew = dirname(__filenameNew)
@@ -34,6 +37,20 @@ export const buildFullEntry = async () => {
             silenceDeprecations: ["legacy-js-api"]
           }
         }
+      }),
+      Components({
+        resolvers: [
+          // 使用 unplugin-icons 和 unplugin-auto-import 从 iconify 中自动导入任何图标集。 您可以参考此模板。
+          //@see https://github.com/sxzz/element-plus-best-practices/blob/db2dfc983ccda5570033a0ac608a1bd9d9a7f658/vite.config.ts#L21-L58
+          // Auto register icon components
+          // 自动注册图标组件
+          IconsResolver({
+            enabledCollections: ["ep"]
+          })
+        ]
+      }),
+      Icons({
+        autoInstall: true
       })
     ],
     // 排除不进行打包的 npm 包，例如 Vue，以便减少包的体积
